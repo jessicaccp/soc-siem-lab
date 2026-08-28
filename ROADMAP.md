@@ -270,7 +270,7 @@ Formato por atividade: Semana, Ordem, Dono, Pré-requisitos, Descrição, Entreg
 
 #### J5: Subir o Suricata em container com network_mode host
 - Semana: 2. Ordem: 1. Dono: Jessica. Pré-requisitos: J1.
-- Descrição: adicionar ao docker-compose um serviço suricata (imagem jasonish/suricata ou oficial) com `network_mode: host` (obrigatório para sniffar a interface, ver R3); montar volumes para /var/log/suricata (eve.json), /etc/suricata (configuração) e /var/lib/suricata (regras); atualizar as regras na primeira subida (`suricata-update`); rodar em modo live apontando para a interface do Notebook 1; conferir que o eve.json está sendo escrito.
+- Descrição: adicionar ao docker-compose um serviço suricata (imagem jasonish/suricata ou oficial) com `network_mode: host` (obrigatório para sniffar a interface, ver R3); montar volumes para /var/log/suricata (eve.json), /etc/suricata (configuração) e /var/lib/suricata (regras); atualizar as regras na primeira subida (`suricata-update`); configurar o eve.json para emitir também os logs de transação (dns, http, tls, ssh, flow), além de alertas, o que dá ao Suricata o papel de NIDS (detecção por assinatura) + análise de tráfego (NSM) na narrativa do projeto; rodar em modo live apontando para a interface do Notebook 1; conferir que o eve.json está sendo escrito.
 - Entregável: container do Suricata rodando com eve.json sendo gravado.
 
 #### J6: Baixar pcaps maliciosos e testar em modo pcap
@@ -358,7 +358,7 @@ Formato por atividade: Semana, Ordem, Dono, Pré-requisitos, Descrição, Entreg
 
 #### J15: Workflow de bloqueio do IP atacante na VM
 - Semana: 6. Ordem: 1. Dono: Jessica. Pré-requisitos: J9, M6.
-- Descrição: no workflow de J9, adicionar o nó de ação de resposta: executar ssh na VM vítima (chave dedicada, sem passphrase, restrita à VM, usuário com sudo sem senha apenas para o firewalld) e rodar `firewalld-cmd --add-rich-rule` bloqueando o IP de origem do alerta; guardar a chave como segredo no Shuffle; documentar o procedimento de criação da chave em `docs/` (segurança da chave é crítica, ver semana 6 do roadmap); testar o nó isolado com um IP de teste.
+- Descrição: no workflow de J9, adicionar o nó de ação de resposta: executar ssh na VM vítima (chave dedicada, sem passphrase, restrita à VM, usuário com sudo sem senha apenas para o firewalld) e rodar `firewalld-cmd --add-rich-rule` bloqueando o IP de origem do alerta; adicionar também uma notificação (email ou chat, ex.: webhook de chat) registrando o alerta e a ação tomada; guardar a chave como segredo no Shuffle; documentar o procedimento de criação da chave em `docs/` (segurança da chave é crítica, ver semana 6 do roadmap); testar o nó isolado com um IP de teste.
 - Entregável: workflow executando bloqueio real de IP na VM.
 
 #### M9: Avaliar o Active Response do Wazuh como complemento
