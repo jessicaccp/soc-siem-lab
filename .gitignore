@@ -1,0 +1,12 @@
+# Segredos e certificados
+.env
+*.pem
+*.key
+configs/wazuh/certs/
+
+# Dados pesados (pcaps)
+assets/pcaps/*.pcap
+assets/pcaps/*.pcapng
+
+# SO
+.DS_Store
