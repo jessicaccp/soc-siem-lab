@@ -9,7 +9,7 @@
 | `trabalho.pdf` (raiz) | Requisitos oficiais da disciplina (fonte da verdade) | Aula 00 |
 | `ROADMAP.md` (raiz) | Planejamento completo: decisões, arquitetura, atividades por semana, riscos | Aula 00 |
 | `docs/architecture.md` | Arquitetura final (diagrama, portas, fluxo de dados) | Atividade J20 |
-| `docs/decisions.md` | Decisões técnicas tomadas ao longo do projeto | Atividade M9 |
+| `docs/decisions.md` | Decisões técnicas tomadas ao longo do projeto | Atividade M9a |
 | `docs/demo-guide.md` | Roteiro da apresentação final | Atividade J19 |
 | `docs/faq.md` | Respostas para perguntas prováveis do professor | Atividade A4 |
 | `docs/open-questions.md` | Perguntas em aberto (tudo que ainda não está decidido) | Sempre que necessário |
