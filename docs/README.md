@@ -13,6 +13,7 @@
 | `docs/demo-guide.md` | Roteiro da apresentação final | Atividade T42 |
 | `docs/faq.md` | Respostas para perguntas prováveis da arguição | Atividade T56 |
 | `docs/open-questions.md` | Perguntas em aberto (tudo que ainda não está decidido) | Sempre que necessário |
+| `docs/status.md` | Status das 56 atividades e índice dos relatórios | Atualizado a cada pull request |
 | `docs/reports/` | Relatórios por atividade (um arquivo por atividade) | Sempre que uma atividade conclui |
 | `docs/guides/` | Guias passo a passo de reprodução (VM, agente, dashboards, replay de pcaps) | Quando um procedimento precisa ser ensinado |
 
@@ -28,13 +29,10 @@ Nota: os arquivos marcados com "Criado em" (ex.: decisions.md na T35, architectu
 
 ## Fluxo semanal
 
-1. Atividade concluída durante a semana: preencher o relatório no repo.
+1. Atividade concluída durante a semana: preencher o relatório no repo e atualizar `docs/status.md`.
 2. Antes do acompanhamento: revisar os relatórios, conferir o critério de aceite da semana e montar os 3 bullets da seção "Acompanhamento".
 3. Segunda-feira: acompanhamento com demo ao vivo, usando os bullets como roteiro da fala.
 
 ## Índice dos relatórios
 
-| ID | Atividade | Semana | Status |
-|---|---|---|---|
-| T01 | Roadmap e definições iniciais | 0 | done |
-| (preencher conforme os relatórios forem criados; relatórios com várias atividades ganham uma linha por atividade) | | | |
+O status de todas as atividades (T01 a T56) e o link de cada relatório ficam em `docs/status.md`; os relatórios propriamente ditos continuam em `docs/reports/`.
