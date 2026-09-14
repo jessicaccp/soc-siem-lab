@@ -9,10 +9,10 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 ## Resumo
 
 - Última atualização: 13/09/2026
-- Concluídas: 4 de 56
+- Concluídas: 5 de 56
 - Semana atual: 1 (14/09/2026), Fundação mínima
-- Pendente da semana: T06, T11
-- Próxima atividade: T06, subir o Wazuh single-node
+- Pendente da semana: T11
+- Próxima atividade: T11, gate do acompanhamento 1
 
 ## Semana 0 (28/08/2026): Definições iniciais (2/2)
 
@@ -21,13 +21,13 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T01 | Criar o roadmap e as definições iniciais do projeto | P0 | done | [T01](reports/T01-roadmap.md) |
 | T02 | Validar o roadmap contra os requisitos oficiais | P0 | done | [T02](reports/T02-validate-roadmap.md) |
 
-## Semana 1 (14/09/2026): Fundação mínima (2/4)
+## Semana 1 (14/09/2026): Fundação mínima (3/4)
 
 | ID | Atividade | Prioridade | Status | Relatório |
 |---|---|---|---|---|
 | T03 | Instalar Docker CE na máquina SOC | P0 | done | [T03](reports/T03-install-docker.md) |
 | T04 | Criar a estrutura de pastas e refinar o README | P0 | done | [T04](reports/T04-repo-structure.md) |
-| T06 | Subir o Wazuh single-node | P0 | pendente | |
+| T06 | Subir o Wazuh single-node | P0 | done | [T06](reports/T06-start-wazuh.md) |
 | T11 | Gate do acompanhamento 1 | P0 | pendente | |
 
 ## Semana 2 (21/09/2026): Vítima e NIDS no ar (0/11)

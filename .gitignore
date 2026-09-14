@@ -2,7 +2,7 @@
 .env
 *.pem
 *.key
-configs/wazuh/certs/
+configs/wazuh/config/wazuh_indexer_ssl_certs/
 
 # Dados pesados (pcaps)
 assets/pcaps/*.pcap

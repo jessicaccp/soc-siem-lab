@@ -4,9 +4,9 @@ Projeto da disciplina Tópicos Especiais em Segurança (PPGCC/UECE, prof. Rafael
 
 ## Status
 
-- Semana atual: 1 (14/09/2026), fundação mínima: T06 e T11.
-- Concluídas: T01 a T04 (4 de 56 atividades).
-- Próxima atividade: T06, subir o Wazuh single-node.
+- Semana atual: 1 (14/09/2026), fundação mínima: T11.
+- Concluídas: T01 a T06 (5 de 56 atividades).
+- Próxima atividade: T11, gate do acompanhamento 1.
 
 Painel completo em [`docs/status.md`](docs/status.md), atualizado a cada pull request.
 
@@ -43,6 +43,19 @@ Fluxo: eventos de sistema (agente) e de rede (Suricata) chegam ao Wazuh, que cla
 - Instalação e validação: [`docs/guides/install-docker.md`](docs/guides/install-docker.md).
 - Versões validadas na máquina SOC de referência (13/09/2026): Docker CE 29.5.1 e Docker Compose 5.1.3.
 - Máquina vítima: VM Linux com o agente Wazuh (atividades T05 a T10).
+
+## Como subir
+
+A stack da máquina SOC fica em `configs/wazuh/` e sobe com Docker Compose:
+
+```bash
+cd configs/wazuh
+cp .env.example .env
+docker compose -f generate-indexer-certs.yml run --rm generator
+docker compose up -d
+```
+
+Dashboard em `https://localhost`, com as credenciais de teste de `configs/wazuh/.env.example`. Procedimento completo, verificação e comandos de parada em [`docs/guides/start-wazuh-stack.md`](docs/guides/start-wazuh-stack.md). Suricata e Shuffle entram nas semanas 2 e 3.
 
 ## Repositório
 
