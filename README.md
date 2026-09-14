@@ -5,8 +5,8 @@ Projeto da disciplina Tópicos Especiais em Segurança (PPGCC/UECE, prof. Rafael
 ## Status
 
 - Semana atual: 1 (14/09/2026), fundação mínima: T03, T04, T06 e T11.
-- Concluídas: T01 (1 de 56 atividades).
-- Próxima atividade: T02, validação do roadmap contra o `trabalho.pdf`.
+- Concluídas: T01 e T02 (2 de 56 atividades).
+- Próxima atividade: T03, instalar e validar o Docker CE na máquina SOC.
 
 Painel completo em [`docs/status.md`](docs/status.md), atualizado a cada pull request.
 
