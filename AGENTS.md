@@ -14,8 +14,9 @@ Regras para quem edita este repositório. Fonte da verdade da disciplina: `traba
 1. `trabalho.pdf`: requisitos da disciplina (5 camadas do SOC, calendário, avaliação).
 2. `ROADMAP.md`: plano completo (decisões D1 a D10, matriz de cobertura 2.1, atividades por semana com IDs T##, prioridade, pré-requisitos, riscos R1 a R9).
 3. `docs/README.md`: índice e convenções dos documentos.
-4. `docs/reports/`: relatórios por atividade, o estado real da execução (status done/partial).
-5. `docs/open-questions.md`: perguntas em aberto (tudo que ainda não está decidido ou documentado).
+4. `docs/reports/`: relatórios por atividade, o detalhe da execução (status done/partial).
+5. `docs/status.md`: painel das 56 atividades (done, partial ou pendente), com o link de cada relatório.
+6. `docs/open-questions.md`: perguntas em aberto (tudo que ainda não está decidido ou documentado).
 
 ## Convenções obrigatórias
 
@@ -23,6 +24,7 @@ Regras para quem edita este repositório. Fonte da verdade da disciplina: `traba
 - Nunca usar o caractere travessão longo (em dash, U+2014) em arquivos do repositório; usar vírgula, ponto e vírgula ou parênteses.
 - Tom dos documentos: registro técnico e factual de engenharia. Descrever o que o sistema faz, o que foi executado e o que ficou pendente, com dados verificáveis. Sem narrativa de processo, sem justificar decisão que já está registrada, sem autoavaliação, sem linguagem derrotista ou vaga, sem hipérbole e sem emoji. Incerteza vira risco ou pergunta em aberto, nunca comentário solto no texto.
 - Um relatório por atividade (ou grupo de atividades da mesma semana) em `docs/reports/`, usando o `TEMPLATE.md`; preencher após a atividade. Atividades de verificação (T02, T45, T53) geram relatório curto com o checklist preenchido.
+- `docs/status.md` é o painel do que está feito e do que falta: atualizar o status das atividades no mesmo commit do relatório, a cada pull request que conclui atividade.
 - Reprodutibilidade: o repositório guarda configurações, scripts e documentação, para que um clone limpo reproduza o ambiente em outra máquina. Estado de máquina (VM, agentes, serviços) e artefatos grandes (pcaps, vídeos) não vão ao repositório: vão como receita de reprodução, acesso documentado e URLs de download. Segredos (chaves, credenciais reais) nunca vão ao repositório. Guias passo a passo de reprodução ficam em `docs/guides/`.
 - Versionamento: cada atividade vai em uma branch própria e é integrada após a verificação do critério de aceite; o relatório entra no mesmo commit. O template de pull request (`.github/pull_request_template.md`) vale como checklist de fechamento.
 - Toda decisão técnica nova: registrar em `docs/decisions.md`.

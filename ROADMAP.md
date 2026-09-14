@@ -49,12 +49,12 @@ Datas-chave do calendário da disciplina:
 
 | #   | Decisão                  | Escolha                                                                                                                        | Justificativa                                                                                                                                                                                                          | Alternativas rejeitadas                                                                                                                                                                    |
 | --- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| D1  | Infraestrutura           | Docker Compose na máquina SOC (Fedora)                                                                                         | Reproduzível, versionável no git, reset rápido para demo; a vítima fica isolada na segunda máquina, na mesma rede                                                                                                      | VMs para a stack (overhead de gerenciamento sem ganho; a VM fica reservada à vítima), cloud (custo e fricção), WSL2 (problemas conhecidos com Wazuh/systemd)                               |
+| D1  | Infraestrutura           | Docker Compose na máquina SOC (Linux com Docker CE)                                                                            | Reproduzível, versionável no git, reset rápido para demo; a stack roda em containers, então a distribuição do host não faz parte da solução; a vítima fica isolada na segunda máquina, na mesma rede                   | VMs para a stack (overhead de gerenciamento sem ganho; a VM fica reservada à vítima), cloud (custo e fricção), WSL2 (problemas conhecidos com Wazuh/systemd)                               |
 | D2  | HIDS + SIEM + Dashboards | Wazuh (manager + indexer + dashboard)                                                                                          | Um único serviço cobre 3 caixas do slide; comunidade grande; regras prontas; script oficial de simulação de ataques para demo                                                                                          | Graylog (não faz HIDS, exigiria OSSEC/Auditd separado), OSSEC (mais antigo, sem dashboard moderno), Velociraptor (foco forense, não SIEM em tempo real), Auditd (só Linux e sem dashboard) |
 | D3  | NIDS                     | Suricata                                                                                                                       | Alertas nativos, regras atualizadas, melhor suporte a replay de pcap (padrão de teste de IDS); roda em container com network_mode host para sniffar a interface                                                        | Zeek (gera metadata/logs, não alertas nativos), Snort (mais datado, regras legacy)                                                                                                         |
 | D4  | SOAR                     | Shuffle                                                                                                                        | Única opção listada no slide; open-source; workflows visuais; integra com Wazuh via webhook                                                                                                                            | Nenhuma (obrigatória)                                                                                                                                                                      |
 | D5  | Dashboards extras        | Grafana fora do escopo obrigatório, como atividade opcional (T32)                                                              | O dashboard do Wazuh (fork do Kibana) já cobre "Grafana ou Kibana" do slide; sem restrição de RAM, o Grafana entra se houver folga na semana, para não competir com o caminho crítico                                  | Grafana como requisito (duplicaria esforço sem requisito novo), Kibana (o Wazuh dashboard já é um fork dele)                                                                               |
-| D6  | Alvo monitorado          | VM Ubuntu (KVM) na máquina vítima                                                                                              | As duas máquinas ficam disponíveis durante todo o semestre, inclusive simultaneamente na apresentação; a VM isola o ambiente de ataque do uso diário, é descartável (snapshot/reset) e o KVM é nativo do Fedora e leve | Vítima instalada direto no host (suja a máquina de uso diário e mistura demos com o ambiente pessoal)                                                                                      |
+| D6  | Alvo monitorado          | VM Linux (KVM) na máquina vítima                                                                                               | As duas máquinas ficam disponíveis durante todo o semestre, inclusive simultaneamente na apresentação; a VM isola o ambiente de ataque do uso diário, é descartável (snapshot/reset) e o KVM é nativo do host e leve   | Vítima instalada direto no host (suja a máquina de uso diário e mistura demos com o ambiente pessoal)                                                                                      |
 | D7  | Geração de detecção NIDS | Replay de pcaps maliciosos (malware-traffic-analysis.net) + ataques originados na máquina SOC                                  | Padrão da indústria para testar regras de IDS; alertas determinísticos; ataques originados no próprio host do SOC são visíveis ao Suricata (tráfego de saída da própria interface), imunes a AP isolation              | Confiar só no tráfego entre máquinas (WiFi com AP isolation pode esconder o tráfego dos dois sentidos)                                                                                     |
 | D8  | Geração de detecção HIDS | Ataques reais (nmap, hydra) contra a VM vítima + script de simulação do Wazuh                                                  | Prova o agente, as regras e o pipeline de ponta a ponta                                                                                                                                                                | Só simulação (menos convincente na demo)                                                                                                                                                   |
 | D9  | SOAR como diferencial    | Workflow: alerta crítico do Wazuh dispara bloqueio do IP atacante                                                              | É a camada que poucas equipes entregam funcionando; vira o destaque da apresentação final                                                                                                                              | SOAR só notificando (sem ação, não cumpre "executa ações")                                                                                                                                 |
@@ -83,8 +83,8 @@ Matriz de rastreabilidade entre o que o slide da disciplina exige e as atividade
                         Rede local (WiFi ou cabo)
    +--------------------------+        +--------------------------+
    |  Máquina SOC             |        |  Máquina vítima          |
-   |  Fedora                  |        |  Fedora                  |
-   |  Docker Compose:         |        |  VM Ubuntu (KVM):        |
+   |  Linux                   |        |  Linux                   |
+   |  Docker Compose:         |        |  VM Linux (KVM):         |
    |  - Wazuh manager+indexer |<-------|  - Wazuh agent           |
    |  - Wazuh dashboard       | agente |  - SSH com senha fraca   |
    |  - Suricata (host net)   | 1514   |  - Serviços frágeis      |
@@ -119,13 +119,13 @@ Fluxo de dados:
 
 ## 4. Modo de execução
 
-Convenção de IDs: T## = atividade, numerada em ordem de execução (T01 a T56). Frente (infra, detecção, dashboards, resposta, documentação, demo) é rótulo de contexto.
+Convenção de IDs: T## = atividade (T01 a T56); o ID é nominal, a ordem real de execução é a de (semana, ordem) na seção 6. Frente (infra, detecção, dashboards, resposta, documentação, demo) é rótulo de contexto.
 
 | Aspecto      | Como funciona                                                                                                                                                                                 |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Ordem        | Sequência única: T01, T02, T03, ... T56. Atividades dentro da semana seguem a ordem numérica; entre semanas vale o critério de aceite da semana anterior como porta de entrada                |
 | Prioridade   | P0 = requisito do slide ou pré-requisito de algo a jusante, não pode sair. P1 = aprofundamento cortável (T32 Grafana, T43 Metasploit), executado só se a semana fechar em dia                 |
-| Máquinas     | Máquina SOC (stack Docker Compose: Wazuh, Suricata, Shuffle) e máquina vítima (VM Ubuntu com o agente). As duas ficam disponíveis durante todo o semestre e rodam em paralelo na apresentação |
+| Máquinas     | Máquina SOC (stack Docker Compose: Wazuh, Suricata, Shuffle) e máquina vítima (VM Linux com o agente). As duas ficam disponíveis durante todo o semestre e rodam em paralelo na apresentação  |
 | Dependências | A atividade só pode começar quando todos os pré-requisitos listados estiverem concluídos e aceitos                                                                                            |
 | Gate semanal | No fim de cada semana, o "Critério de aceite" da tabela da seção 5 é verificado antes de abrir a semana seguinte                                                                              |
 | Carga        | Uma pessoa executa todas as frentes; por isso cada semana tem prioridade e escopo mínimo declarados, e o risco R8 é acompanhado no report                                                     |
@@ -173,7 +173,7 @@ Remanejado para a semana 2: T05, T07, T08, T09 e T10 (virtualização, VM vítim
 
 Objetivo: agente Wazuh Active na VM vítima e Suricata gerando alertas visíveis no dashboard.
 
-Atividades na ordem: T05 (P0): preparar a virtualização e criar a VM vítima; T07 (P0): instalar o SO na VM e liberar o acesso ssh; T08 (P0): liberar portas no firewalld; T09 (P0): instalar e registrar o agente na VM; T10 (P0): validar a coleta de logs e o status Active; T12 (P0): subir o Suricata com network_mode host; T13 (P0): baixar pcaps maliciosos e testar em modo pcap; T14 (P0): integrar Suricata ao Wazuh (infraestrutura); T15 (P0): criar o decoder para os eventos do Suricata no Wazuh; T16 (P0): criar as regras de correspondência dos alertas do Suricata; T17 (P0): validar alertas no dashboard.
+Atividades na ordem: T05 (P0): preparar a virtualização e criar a VM vítima; T07 (P0): instalar o SO na VM e liberar o acesso ssh; T08 (P0): liberar portas no firewall; T09 (P0): instalar e registrar o agente na VM; T10 (P0): validar a coleta de logs e o status Active; T12 (P0): subir o Suricata com network_mode host; T13 (P0): baixar pcaps maliciosos e testar em modo pcap; T14 (P0): integrar Suricata ao Wazuh (infraestrutura); T15 (P0): criar o decoder para os eventos do Suricata no Wazuh; T16 (P0): criar as regras de correspondência dos alertas do Suricata; T17 (P0): validar alertas no dashboard.
 
 Se não couber na semana: T16 e T17 descem para a semana 3, junto com o bloco SOAR, mantendo a integração (T14) e o decoder (T15).
 
@@ -201,7 +201,7 @@ Atividades na ordem: T39 (P0): script de demo único; T40 (P0): analisar ruído 
 
 ### Acompanhamento 8 (16/11/2026): Hardening e resiliência
 
-Atividades na ordem: T44 (P0): documentar arquitetura final; T45 (P0): verificação técnica da arquitetura contra o ambiente real; T46 (P0): teste de resiliência da máquina SOC (reboot e stack); T47 (P0): teste de resiliência da VM (reboot e reconexão do agente); T48 (P0): reduzir exposição (bind localhost, firewalld); T49 (P0): versionar configurações no git.
+Atividades na ordem: T44 (P0): documentar arquitetura final; T45 (P0): verificação técnica da arquitetura contra o ambiente real; T46 (P0): teste de resiliência da máquina SOC (reboot e stack); T47 (P0): teste de resiliência da VM (reboot e reconexão do agente); T48 (P0): reduzir exposição (bind localhost, firewall); T49 (P0): versionar configurações no git.
 
 ### Acompanhamento 9 (23/11/2026): Ensaio e vídeo
 
@@ -230,14 +230,14 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 
 #### T02: Validar o roadmap contra os requisitos oficiais
 - Semana: 0. Ordem: 2. Prioridade: P0. Pré-requisitos: T01.
-- Descrição: ler o `trabalho.pdf` de ponta a ponta e conferir cada requisito do slide contra a matriz de cobertura (seção 2.1) e contra o calendário; conferir que as 5 camadas, os pesos e as datas estão refletidos; conferir que toda atividade tem pré-requisito existente, entregável e critério de aceite; corrigir as divergências em `docs/open-questions.md` ou na própria tabela.
+- Descrição: ler o `trabalho.pdf` de ponta a ponta e conferir cada requisito do slide contra a matriz de cobertura (seção 2.1) e contra o calendário; conferir que as 5 camadas, os pesos e as datas estão refletidos; conferir que toda atividade tem pré-requisito existente, entregável e critério de aceite; corrigir as divergências em `docs/open-questions.md` ou na própria tabela. Concluída em 13/09/2026; relatório em `docs/reports/T02-validate-roadmap.md`. Ajustes aplicados: o documento deixou de fixar a distribuição de SO do host e ganhou nota sobre a ordem real de execução.
 - Entregável: checklist de validação registrado no relatório, com a matriz de cobertura fechada (nenhum requisito sem atividade).
 
 ### Semana 1: Fundação mínima
 
 #### T03: Instalar Docker CE na máquina SOC
 - Semana: 1. Ordem: 1. Prioridade: P0. Pré-requisitos: T01, T02.
-- Descrição: habilitar o repositório docker-ce no dnf (`sudo dnf config-manager addrepo` para o repositório oficial docker-ce), instalar os pacotes docker-ce, docker-ce-cli, containerd.io e docker-compose-plugin; habilitar e iniciar o serviço (`sudo systemctl enable --now docker`); adicionar o usuário ao grupo docker; validar com `docker run hello-world`. Decidir e documentar: usar Docker CE (recomendado) e não podman-compose, para evitar a ambiguidade do R6.
+- Descrição: instalar o Docker CE pelo procedimento oficial da distribuição do host (repositório oficial ou script get.docker.com), com os pacotes docker-ce, docker-ce-cli, containerd.io e docker-compose-plugin; habilitar e iniciar o serviço (`sudo systemctl enable --now docker`); adicionar o usuário ao grupo docker; validar com `docker run hello-world`. Decidir e documentar: usar Docker CE (recomendado) e não podman-compose, para evitar a ambiguidade do R6.
 - Entregável: `docker version` funcionando; comando de instalação registrado no README.
 
 #### T04: Criar a estrutura de pastas e refinar o README
@@ -259,22 +259,22 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 
 #### T05: Preparar a virtualização e criar a VM vítima
 - Semana: 2. Ordem: 1. Prioridade: P0. Pré-requisitos: T01.
-- Descrição: instalar o grupo de virtualização no Fedora da máquina vítima (`sudo dnf groupinstall virtualization`, libvirt + virt-manager); baixar a ISO do Ubuntu Server LTS; criar a VM com 2GB de RAM, 20GB de disco e rede acessível da máquina SOC (ex.: bridge com IP na rede local, ou NAT com port forward, pois os ataques partem da máquina SOC nas T24, T33, T34 e T38); registrar a spec da VM (recursos, rede, caminho da ISO) para a receita de reprodução.
+- Descrição: instalar a virtualização na máquina vítima (libvirt + virt-manager, pelo gerenciador de pacotes do host); baixar a ISO de uma distribuição Linux server (LTS); criar a VM com 2GB de RAM, 20GB de disco e rede acessível da máquina SOC (ex.: bridge com IP na rede local, ou NAT com port forward, pois os ataques partem da máquina SOC nas T24, T33, T34 e T38); registrar a spec da VM (recursos, rede, caminho da ISO) para a receita de reprodução.
 - Entregável: VM criada no virt-manager com rede acessível da máquina SOC; spec documentada (docs/reports/T05-create-vm.md).
 
 #### T07: Instalar o SO na VM e liberar o acesso ssh
 - Semana: 2. Ordem: 2. Prioridade: P0. Pré-requisitos: T05.
-- Descrição: instalar o Ubuntu Server na VM com usuário de teste com sudo; habilitar openssh-server; registrar o IP da VM (fixo via DHCP reservado, se possível) e o acesso ssh; testar o acesso a partir da máquina SOC; snapshot limpo antes de demos.
+- Descrição: instalar a distribuição Linux escolhida na VM, com usuário de teste com sudo; habilitar openssh-server; registrar o IP da VM (fixo via DHCP reservado, se possível) e o acesso ssh; testar o acesso a partir da máquina SOC; snapshot limpo antes de demos.
 - Entregável: VM acessível por ssh; IP, credenciais de teste e comandos documentados no repo (docs/reports/T05-create-vm.md).
 
-#### T08: Liberar as portas do Wazuh no firewalld da máquina SOC
+#### T08: Liberar as portas do Wazuh no firewall da máquina SOC
 - Semana: 2. Ordem: 3. Prioridade: P0. Pré-requisitos: T06.
-- Descrição: no firewalld da máquina SOC, liberar 1514/tcp (eventos dos agentes), 1515/tcp (registro/enroll de agentes), 55000/tcp (comunicação de autenticação de agentes, quando aplicável) e 443/tcp (dashboard) apenas para a rede local de lab (zona public ou serviço custom); documentar as regras; validar com nmap a partir da máquina vítima.
+- Descrição: no firewall da máquina SOC (firewalld, ufw ou nftables, conforme a distribuição), liberar 1514/tcp (eventos dos agentes), 1515/tcp (registro/enroll de agentes), 55000/tcp (comunicação de autenticação de agentes, quando aplicável) e 443/tcp (dashboard) apenas para a rede local de lab (zona public ou serviço custom); documentar as regras; validar com nmap a partir da máquina vítima.
 - Entregável: portas acessíveis da máquina vítima para a máquina SOC; regras documentadas no README.
 
 #### T09: Instalar e registrar o Wazuh agent na VM
 - Semana: 2. Ordem: 4. Prioridade: P0. Pré-requisitos: T07, T06, T08.
-- Descrição: adicionar o repositório oficial do Wazuh no Ubuntu da VM; instalar o pacote wazuh-agent; configurar o endereço do manager no `/var/ossec/etc/ossec.conf` (WAZUH_MANAGER = IP da máquina SOC) e o nome do agente; registrar o agente (enroll com a chave do manager ou com authd na porta 1515); iniciar e habilitar o serviço (`sudo systemctl enable --now wazuh-agent`); conferir o status e o arquivo de chaves em /var/ossec/etc/client.keys.
+- Descrição: adicionar o repositório oficial do Wazuh na VM (apt ou dnf, conforme a distribuição); instalar o pacote wazuh-agent; configurar o endereço do manager no `/var/ossec/etc/ossec.conf` (WAZUH_MANAGER = IP da máquina SOC) e o nome do agente; registrar o agente (enroll com a chave do manager ou com authd na porta 1515); iniciar e habilitar o serviço (`sudo systemctl enable --now wazuh-agent`); conferir o status e o arquivo de chaves em /var/ossec/etc/client.keys.
 - Entregável: agente instalado e registrado no manager (client.keys presente, serviço ativo).
 
 #### T10: Validar a coleta de logs e o status Active do agente
@@ -397,12 +397,12 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 
 #### T33: Preparar o acesso SSH por chave à VM vítima
 - Semana: 6. Ordem: 1. Prioridade: P0. Pré-requisitos: T20, T19.
-- Descrição: criar uma chave SSH dedicada (sem passphrase, restrita à VM vítima) e instalá-la na VM; configurar na VM um usuário com sudo sem senha apenas para o firewalld (comando restrito ao bloqueio de IP); testar o acesso SSH por chave a partir da máquina SOC; guardar a chave como segredo no Shuffle (a configuração do segredo fica na T34); documentar o procedimento de criação da chave em `docs/` (segurança da chave é crítica).
+- Descrição: criar uma chave SSH dedicada (sem passphrase, restrita à VM vítima) e instalá-la na VM; configurar na VM um usuário com sudo sem senha apenas para o comando de bloqueio no firewall (restrito ao bloqueio de IP); testar o acesso SSH por chave a partir da máquina SOC; guardar a chave como segredo no Shuffle (a configuração do segredo fica na T34); documentar o procedimento de criação da chave em `docs/` (segurança da chave é crítica).
 - Entregável: acesso SSH por chave funcionando + procedimento documentado.
 
 #### T34: Adicionar o nó de bloqueio real e notificação no workflow
 - Semana: 6. Ordem: 2. Prioridade: P0. Pré-requisitos: T33, T20.
-- Descrição: no workflow de T20, adicionar o nó de ação de resposta: executar ssh na VM vítima e rodar `firewalld-cmd --add-rich-rule` bloqueando o IP de origem do alerta; adicionar também uma notificação (email ou chat, ex.: webhook de chat) registrando o alerta e a ação tomada; configurar a chave criada na T33 como segredo no Shuffle; testar o nó isolado com um IP de teste.
+- Descrição: no workflow de T20, adicionar o nó de ação de resposta: executar ssh na VM vítima e rodar o comando de bloqueio no firewall do alvo (regra rich do firewalld, nftables ou ufw) bloqueando o IP de origem do alerta; adicionar também uma notificação (email ou chat, ex.: webhook de chat) registrando o alerta e a ação tomada; configurar a chave criada na T33 como segredo no Shuffle; testar o nó isolado com um IP de teste.
 - Entregável: workflow executando bloqueio real de IP na VM + notificação.
 
 #### T35: Avaliar o Active Response do Wazuh e decidir a divisão de papéis
@@ -476,7 +476,7 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 
 #### T48: Reduzir exposição da stack
 - Semana: 8. Ordem: 5. Prioridade: P0. Pré-requisitos: T03, T08.
-- Descrição: ajustar o compose para bind das portas de administração (dashboard, Shuffle) em 127.0.0.1 quando não precisarem ser acessadas de fora; revisar o firewalld da máquina SOC para liberar somente o necessário (1514, 1515 para os agentes); validar com nmap externo que apenas as portas esperadas respondem.
+- Descrição: ajustar o compose para bind das portas de administração (dashboard, Shuffle) em 127.0.0.1 quando não precisarem ser acessadas de fora; revisar o firewall da máquina SOC para liberar somente o necessário (1514, 1515 para os agentes); validar com nmap externo que apenas as portas esperadas respondem.
 - Entregável: scan externo mostrando somente as portas necessárias.
 
 #### T49: Versionar todas as configurações
@@ -493,7 +493,7 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 
 #### T51: Gravar vídeo de 3 a 5 minutos
 - Semana: 9. Ordem: 2. Prioridade: P0. Pré-requisitos: T50.
-- Descrição: gravar com OBS (ou ferramenta nativa do Fedora): arquitetura em 30s, ataque, detecção e resposta em 2 a 3 minutos, métricas (volume de alertas, tempo de resposta) em 30s; salvar em `assets/demo.mp4` (e/ou subir no YouTube não listado para o link no slide); conferir áudio e legibilidade dos terminais.
+- Descrição: gravar com OBS (ou ferramenta de captura do host): arquitetura em 30s, ataque, detecção e resposta em 2 a 3 minutos, métricas (volume de alertas, tempo de resposta) em 30s; salvar em `assets/demo.mp4` (e/ou subir no YouTube não listado para o link no slide); conferir áudio e legibilidade dos terminais.
 - Entregável: vídeo de 3 a 5 minutos salvo e acessível.
 
 #### T52: Preparar os slides
@@ -534,7 +534,7 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 | R3  | Suricata em container não enxerga a interface                                                | NIDS cego                                 | network_mode host é obrigatório; validar na semana 2 (T12)                                                                                                                                                                                            |
 | R4  | Shuffle pesado (Java) desestabiliza a stack                                                  | Stack instável durante a demo             | Limitar RAM do container (Xmx) na T18; Wazuh tem prioridade                                                                                                                                                                                           |
 | R5  | Regras padrão do Wazuh geram ruído (falsos positivos)                                        | Dashboard poluído, demo confusa           | Regras custom ajustadas na semana 4 (T26, T27 e T28) e revisadas na semana 7 (T40 e T41)                                                                                                                                                              |
-| R6  | Docker no Fedora tem dois caminhos (Docker CE vs podman)                                     | Fricção e incompatibilidade               | Escolher Docker CE na semana 1 (T03) e documentar; não misturar                                                                                                                                                                                       |
+| R6 | Ambiguidade entre Docker CE e podman-compose no host Linux                        | Fricção e incompatibilidade               | Escolher Docker CE na semana 1 (T03) e documentar; não misturar                                                                                                                                                                                       |
 | R7  | Falha na integração Wazuh, Shuffle (webhook)                                                 | SOAR não dispara                          | Fallback: Active Response nativo do Wazuh como camada de resposta independente (T35 e T36)                                                                                                                                                            |
 | R8  | Carga concentrada em uma pessoa por semana                                                   | Semana travada e entrega atrasada         | Prioridade P0/P1 por atividade, escopo mínimo da semana (seção 5); as atividades P1 (T32, T43) saem antes das P0; o report semanal registra os desvios                                                                                                |
 | R9  | Apresentação depende das duas máquinas em rede                                               | Demo não roda na hora                     | T55 valida sala, rede e tomadas com antecedência; vídeo offline como plano B; alternativa documentada de rodar a VM vítima na própria máquina SOC                                                                                                     |
