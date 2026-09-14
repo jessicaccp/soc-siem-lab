@@ -4,9 +4,9 @@ Projeto da disciplina Tópicos Especiais em Segurança (PPGCC/UECE, prof. Rafael
 
 ## Status
 
-- Semana atual: 1 (14/09/2026), fundação mínima: T03, T04, T06 e T11.
-- Concluídas: T01 e T02 (2 de 56 atividades).
-- Próxima atividade: T03, instalar e validar o Docker CE na máquina SOC.
+- Semana atual: 1 (14/09/2026), fundação mínima: T04, T06 e T11.
+- Concluídas: T01 a T03 (3 de 56 atividades).
+- Próxima atividade: T04, criar a estrutura de pastas e refinar o README.
 
 Painel completo em [`docs/status.md`](docs/status.md), atualizado a cada pull request.
 
@@ -37,6 +37,13 @@ Máquina SOC e máquina vítima na mesma rede local:
 
 Fluxo: eventos de sistema (agente) e de rede (Suricata) chegam ao Wazuh, que classifica a severidade; alertas críticos acionam o Shuffle, que bloqueia o IP do atacante no firewall da vítima.
 
+## Requisitos de ambiente
+
+- Máquina SOC: Linux com Docker CE e o plugin Docker Compose. A stack roda em containers, então a distribuição do host não define a solução.
+- Instalação e validação: [`docs/guides/install-docker.md`](docs/guides/install-docker.md).
+- Versões validadas na máquina SOC de referência (13/09/2026): Docker CE 29.5.1 e Docker Compose 5.1.3.
+- Máquina vítima: VM Linux com o agente Wazuh (atividades T05 a T10).
+
 ## Repositório
 
 | Arquivo | Descrição |
@@ -48,7 +55,6 @@ Fluxo: eventos de sistema (agente) e de rede (Suricata) chegam ao Wazuh, que cla
 | `docs/status.md` | Status das atividades e índice dos relatórios |
 | `docs/reports/` | Relatórios por atividade |
 | `docs/open-questions.md` | Perguntas em aberto |
-
 ## Processo
 
 - Atividades numeradas em ordem de execução (T01 a T56), com prioridade P0/P1, pré-requisitos e critério de aceite (ROADMAP.md, seção 6).
