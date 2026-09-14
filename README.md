@@ -4,9 +4,9 @@ Projeto da disciplina Tópicos Especiais em Segurança (PPGCC/UECE, prof. Rafael
 
 ## Status
 
-- Semana atual: 1 (14/09/2026), fundação mínima: T03, T04, T06 e T11.
-- Concluídas: T01 e T02 (2 de 56 atividades).
-- Próxima atividade: T03, instalar e validar o Docker CE na máquina SOC.
+- Semana atual: 2 (21/09/2026), vítima e NIDS no ar: T05, T07 a T10 e T12 a T17.
+- Concluídas: 6 de 56 atividades (semana 1 fechada).
+- Próxima atividade: T05, preparar a virtualização e criar a VM vítima.
 
 Painel completo em [`docs/status.md`](docs/status.md), atualizado a cada pull request.
 
@@ -28,7 +28,7 @@ Máquina SOC e máquina vítima na mesma rede local:
 
 ```
  Máquina SOC                      Máquina vítima
- Docker Compose:                  VM Ubuntu (KVM):
+ Docker Compose:                  VM Linux (KVM):
  Wazuh + Suricata + Shuffle  <--  agente Wazuh + serviços frágeis
         ^
         | ataques reais (nmap, hydra) partem da máquina SOC,
@@ -37,17 +37,49 @@ Máquina SOC e máquina vítima na mesma rede local:
 
 Fluxo: eventos de sistema (agente) e de rede (Suricata) chegam ao Wazuh, que classifica a severidade; alertas críticos acionam o Shuffle, que bloqueia o IP do atacante no firewall da vítima.
 
+## Requisitos de ambiente
+
+- Máquina SOC: Linux com Docker CE e o plugin Docker Compose. A stack roda em containers, então a distribuição do host não define a solução.
+- Instalação e validação: [`docs/guides/install-docker.md`](docs/guides/install-docker.md).
+- Versões validadas na máquina SOC de referência (13/09/2026): Docker CE 29.5.1 e Docker Compose 5.1.3.
+- Máquina vítima: VM Linux com o agente Wazuh (atividades T05 a T10).
+
+## Como subir
+
+A stack da máquina SOC fica em `configs/wazuh/` e sobe com Docker Compose:
+
+```bash
+cd configs/wazuh
+cp .env.example .env
+docker compose -f generate-indexer-certs.yml run --rm generator
+docker compose up -d
+```
+
+Dashboard em `https://localhost`, com as credenciais de teste de `configs/wazuh/.env.example`. Procedimento completo, verificação e comandos de parada em [`docs/guides/start-wazuh-stack.md`](docs/guides/start-wazuh-stack.md). Suricata e Shuffle entram nas semanas 2 e 3.
+
 ## Repositório
 
-| Arquivo | Descrição |
+| Arquivo ou pasta | Descrição |
 |---|---|
 | `trabalho.pdf` | Requisitos oficiais da disciplina |
 | `ROADMAP.md` | Plano do projeto: decisões, arquitetura, atividades por semana, riscos |
 | `AGENTS.md` | Convenções de edição do repositório |
-| `docs/README.md` | Índice dos documentos |
-| `docs/status.md` | Status das atividades e índice dos relatórios |
-| `docs/reports/` | Relatórios por atividade |
-| `docs/open-questions.md` | Perguntas em aberto |
+| `docs/` | Documentação: índice, painel de status, relatórios, guias, perguntas em aberto |
+| `configs/` | Configurações por serviço, em `suricata/`, `wazuh/` e `shuffle/` |
+| `scripts/` | `attacks/` (nmap, hydra, simulação do Wazuh) e `demo/` (cenário end-to-end) |
+| `assets/` | pcaps de teste e artefatos de demo, não versionados por tamanho |
+| `.github/` | Template de pull request |
+
+```text
+soc-siem-lab/
+├── configs/            # suricata/, wazuh/, shuffle/
+├── docs/               # README, status.md, reports/, guides/, open-questions.md
+├── scripts/
+│   ├── attacks/        # nmap, hydra, simulação de ataques do Wazuh
+│   └── demo/           # script único do cenário end-to-end
+├── assets/             # pcaps de teste e artefatos de demo
+└── .github/            # template de pull request
+```
 
 ## Processo
 

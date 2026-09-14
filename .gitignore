@@ -2,11 +2,14 @@
 .env
 *.pem
 *.key
-configs/wazuh/certs/
+configs/wazuh/config/wazuh_indexer_ssl_certs/
 
 # Dados pesados (pcaps)
 assets/pcaps/*.pcap
 assets/pcaps/*.pcapng
+
+# Artefatos de demo (vídeo)
+assets/*.mp4
 
 # SO
 .DS_Store

@@ -9,10 +9,10 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 ## Resumo
 
 - Última atualização: 13/09/2026
-- Concluídas: 2 de 56
-- Semana atual: 1 (14/09/2026), Fundação mínima
-- Pendente da semana: T03, T04, T06, T11
-- Próxima atividade: T03, instalar o Docker CE na máquina SOC (Docker CE 29.5.1 já presente no host, resta validar e registrar)
+- Concluídas: 6 de 56
+- Semana atual: 2 (21/09/2026), Vítima e NIDS no ar
+- Pendente da semana: T05, T07 a T10 e T12 a T17
+- Próxima atividade: T05, preparar a virtualização e criar a VM vítima
 
 ## Semana 0 (28/08/2026): Definições iniciais (2/2)
 
@@ -21,14 +21,14 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T01 | Criar o roadmap e as definições iniciais do projeto | P0 | done | [T01](reports/T01-roadmap.md) |
 | T02 | Validar o roadmap contra os requisitos oficiais | P0 | done | [T02](reports/T02-validate-roadmap.md) |
 
-## Semana 1 (14/09/2026): Fundação mínima (0/4)
+## Semana 1 (14/09/2026): Fundação mínima (4/4)
 
 | ID | Atividade | Prioridade | Status | Relatório |
 |---|---|---|---|---|
-| T03 | Instalar Docker CE na máquina SOC | P0 | pendente | |
-| T04 | Criar a estrutura de pastas e refinar o README | P0 | pendente | |
-| T06 | Subir o Wazuh single-node | P0 | pendente | |
-| T11 | Gate do acompanhamento 1 | P0 | pendente | |
+| T03 | Instalar Docker CE na máquina SOC | P0 | done | [T03](reports/T03-install-docker.md) |
+| T04 | Criar a estrutura de pastas e refinar o README | P0 | done | [T04](reports/T04-repo-structure.md) |
+| T06 | Subir o Wazuh single-node | P0 | done | [T06](reports/T06-start-wazuh.md) |
+| T11 | Gate do acompanhamento 1 | P0 | done | [T11](reports/T11-gate-week-1.md) |
 
 ## Semana 2 (21/09/2026): Vítima e NIDS no ar (0/11)
 
