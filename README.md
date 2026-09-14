@@ -4,9 +4,9 @@ Projeto da disciplina Tópicos Especiais em Segurança (PPGCC/UECE, prof. Rafael
 
 ## Status
 
-- Semana atual: 1 (14/09/2026), fundação mínima: T11.
-- Concluídas: T01 a T06 (5 de 56 atividades).
-- Próxima atividade: T11, gate do acompanhamento 1.
+- Semana atual: 2 (21/09/2026), vítima e NIDS no ar: T05, T07 a T10 e T12 a T17.
+- Concluídas: 6 de 56 atividades (semana 1 fechada).
+- Próxima atividade: T05, preparar a virtualização e criar a VM vítima.
 
 Painel completo em [`docs/status.md`](docs/status.md), atualizado a cada pull request.
 

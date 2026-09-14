@@ -4,7 +4,8 @@ Registro de tudo que ainda não está decidido ou documentado no projeto. Pergun
 
 ## Em aberto
 
-(nenhuma no momento)
+- Onde roda a VM vítima: dentro do WSL2 da máquina SOC (o `/dev/kvm` está disponível) ou em uma segunda máquina da rede? A resposta define o desenho da semana 2 e se a T08 precisa de mudança de rede no Windows (portproxy e firewall) para o agente alcançar o manager nas portas 1514, 1515 e 55000. Qualquer alteração de rede no host precisa de aviso prévio à usuária.
+- Na T48, confirmar se prender o dashboard em `127.0.0.1` mantém o acesso pelo navegador do Windows. Hoje o acesso funciona por `localhost` do WSL2 e a porta 443 está publicada em todas as interfaces.
 
 ## Resolvidas
 
