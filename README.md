@@ -16,14 +16,14 @@ Ambiente SOC/SIEM open-source para detecção de ataques e resposta automática.
 
 ## Arquitetura
 
-Duas máquinas na mesma rede local:
+Máquina SOC e máquina vítima na mesma rede local:
 
 ```
- Notebook 1 (SOC)                 Notebook 2 (vítima)
+ Máquina SOC                      Máquina vítima
  Docker Compose:                  VM Ubuntu (KVM):
  Wazuh + Suricata + Shuffle  <--  agente Wazuh + serviços frágeis
         ^
-        | ataques reais (nmap, hydra) partem do Notebook 1,
+        | ataques reais (nmap, hydra) partem da máquina SOC,
         | visíveis ao Suricata na própria interface
 ```
 
@@ -42,8 +42,9 @@ Fluxo: eventos de sistema (agente) e de rede (Suricata) chegam ao Wazuh, que cla
 
 ## Processo
 
-- Divisão de trabalho por atividade, com dono, pré-requisitos e critério de aceite (ROADMAP.md, seção 6).
+- Atividades numeradas em ordem de execução (T01 a T56), com prioridade P0/P1, pré-requisitos e critério de aceite (ROADMAP.md, seção 6).
 - Cada atividade concluída gera relatório em `docs/reports/`, com dificuldades e aprendizados para as atividades dependentes.
+- Cada atividade vai em uma branch própria e é integrada após a verificação do critério de aceite.
 - O `ROADMAP.md` é editado apenas em decisões de mudança forte; ajustes pontuais vão para os relatórios ou para `docs/open-questions.md`.
 
 ## Convenções

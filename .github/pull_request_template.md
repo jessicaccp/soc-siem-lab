@@ -1,17 +1,19 @@
-Título: `<ID>: <nome>` (ex.: `J3: Subir o Wazuh single-node`)
+Título: `<ID>: <nome>` (ex.: `T06: Subir o Wazuh single-node`)
 
 ## O que mudou
 (arquivos principais e o que foi entregue)
 
 ## Dificuldades / pontos de atenção
-(para o revisor: o que não funcionou de primeira, decisões)
+(o que não funcionou de primeira, decisões)
 
 ## Evidências
 (prints, logs, comandos. Se for só documentação, remova esta seção)
 
-## Para o revisor
-- [ ] A aplicação executa e o comportamento esperado está demonstrado
-- [ ] Código sem erros aparentes
-- [ ] Relatório preenchido em `docs/reports/`
+## Checklist de fechamento
+- [ ] A atividade executa e o comportamento esperado está demonstrado
+- [ ] Sem erros aparentes
+- [ ] Relatório preenchido em `docs/reports/` com status done
+- [ ] Critério de aceite da semana conferido (ROADMAP.md, seção 5)
+- [ ] Nenhum segredo, pcap ou artefato grande no commit
 
-(Revisão leve: correções necessárias são registradas como atividade nova e tratadas posteriormente; não bloqueiam o merge.)
+(Entrega por branch: integrar após a verificação do critério de aceite. Correções pendentes são registradas como atividade nova no ROADMAP.md.)
