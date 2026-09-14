@@ -4,9 +4,9 @@ Projeto da disciplina Tópicos Especiais em Segurança (PPGCC/UECE, prof. Rafael
 
 ## Status
 
-- Semana atual: 1 (14/09/2026), fundação mínima: T04, T06 e T11.
-- Concluídas: T01 a T03 (3 de 56 atividades).
-- Próxima atividade: T04, criar a estrutura de pastas e refinar o README.
+- Semana atual: 1 (14/09/2026), fundação mínima: T06 e T11.
+- Concluídas: T01 a T04 (4 de 56 atividades).
+- Próxima atividade: T06, subir o Wazuh single-node.
 
 Painel completo em [`docs/status.md`](docs/status.md), atualizado a cada pull request.
 
@@ -28,7 +28,7 @@ Máquina SOC e máquina vítima na mesma rede local:
 
 ```
  Máquina SOC                      Máquina vítima
- Docker Compose:                  VM Ubuntu (KVM):
+ Docker Compose:                  VM Linux (KVM):
  Wazuh + Suricata + Shuffle  <--  agente Wazuh + serviços frágeis
         ^
         | ataques reais (nmap, hydra) partem da máquina SOC,
@@ -46,15 +46,28 @@ Fluxo: eventos de sistema (agente) e de rede (Suricata) chegam ao Wazuh, que cla
 
 ## Repositório
 
-| Arquivo | Descrição |
+| Arquivo ou pasta | Descrição |
 |---|---|
 | `trabalho.pdf` | Requisitos oficiais da disciplina |
 | `ROADMAP.md` | Plano do projeto: decisões, arquitetura, atividades por semana, riscos |
 | `AGENTS.md` | Convenções de edição do repositório |
-| `docs/README.md` | Índice dos documentos |
-| `docs/status.md` | Status das atividades e índice dos relatórios |
-| `docs/reports/` | Relatórios por atividade |
-| `docs/open-questions.md` | Perguntas em aberto |
+| `docs/` | Documentação: índice, painel de status, relatórios, guias, perguntas em aberto |
+| `configs/` | Configurações por serviço, em `suricata/`, `wazuh/` e `shuffle/` |
+| `scripts/` | `attacks/` (nmap, hydra, simulação do Wazuh) e `demo/` (cenário end-to-end) |
+| `assets/` | pcaps de teste e artefatos de demo, não versionados por tamanho |
+| `.github/` | Template de pull request |
+
+```text
+soc-siem-lab/
+├── configs/            # suricata/, wazuh/, shuffle/
+├── docs/               # README, status.md, reports/, guides/, open-questions.md
+├── scripts/
+│   ├── attacks/        # nmap, hydra, simulação de ataques do Wazuh
+│   └── demo/           # script único do cenário end-to-end
+├── assets/             # pcaps de teste e artefatos de demo
+└── .github/            # template de pull request
+```
+
 ## Processo
 
 - Atividades numeradas em ordem de execução (T01 a T56), com prioridade P0/P1, pré-requisitos e critério de aceite (ROADMAP.md, seção 6).

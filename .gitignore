@@ -8,5 +8,8 @@ configs/wazuh/certs/
 assets/pcaps/*.pcap
 assets/pcaps/*.pcapng
 
+# Artefatos de demo (vídeo)
+assets/*.mp4
+
 # SO
 .DS_Store
