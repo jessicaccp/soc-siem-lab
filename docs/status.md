@@ -9,10 +9,10 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 ## Resumo
 
 - Última atualização: 15/09/2026
-- Concluídas: 10 de 56
+- Concluídas: 11 de 56
 - Semana atual: 2 (21/09/2026), Vítima e NIDS no ar
-- Pendente da semana: T10 e T12 a T17
-- Próxima atividade: T10, validar a coleta de logs e o status Active do agente
+- Pendente da semana: T12 a T17
+- Próxima atividade: T12, subir o Suricata em container com network_mode host
 
 ## Semana 0 (28/08/2026): Definições iniciais (2/2)
 
@@ -30,7 +30,7 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T06 | Subir o Wazuh single-node | P0 | done | [T06](reports/T06-start-wazuh.md) |
 | T11 | Gate do acompanhamento 1 | P0 | done | [T11](reports/T11-gate-week-1.md) |
 
-## Semana 2 (21/09/2026): Vítima e NIDS no ar (4/11)
+## Semana 2 (21/09/2026): Vítima e NIDS no ar (5/11)
 
 | ID | Atividade | Prioridade | Status | Relatório |
 |---|---|---|---|---|
@@ -38,6 +38,7 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T07 | Instalar o SO na VM e liberar o acesso ssh | P0 | done | [T07](reports/T05-create-vm.md) |
 | T08 | Liberar as portas do Wazuh no firewalld da máquina SOC | P0 | done | [T08](reports/T08-open-wazuh-ports.md) |
 | T09 | Instalar e registrar o Wazuh agent na VM | P0 | done | [T09](reports/T09-wazuh-agent.md) |
+| T10 | Validar a coleta de logs e o status Active do agente | P0 | done | [T10](reports/T10-validate-agent.md) |
 | T09 | Instalar e registrar o Wazuh agent na VM | P0 | pendente | |
 | T10 | Validar a coleta de logs e o status Active do agente | P0 | pendente | |
 | T12 | Subir o Suricata em container com network_mode host | P0 | pendente | |
