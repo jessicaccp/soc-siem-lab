@@ -1,9 +1,9 @@
-# T05: Preparar a virtualização e criar a VM vítima
+# T05, T07: Virtualização, VM vítima e acesso ssh
 
 ## Metadados
 
 - Semana: 2
-- Atividades cobertas: T05
+- Atividades cobertas: T05, T07
 - Prioridade: P0
 - Pré-requisitos: T01
 - Status: done
@@ -44,6 +44,29 @@ ssh -o BatchMode=yes victim@192.168.122.50
 
 A lista de métodos na última resposta mostra que o `sshd` da VM oferece autenticação por senha, que é a fragilidade intencional para os ataques de força bruta da T26.
 
+### T07: Instalar o SO na VM e liberar o acesso ssh
+
+O sistema operacional é instalado pela cloud image no cloud-init (T05), então a atividade se concentra em validar o acesso, fixar o endereço e criar o ponto de retorno limpo.
+
+- `openssh-server` presente na imagem: `1:8.9p1-3ubuntu0.17`.
+- Acesso por senha validado a partir da máquina SOC. Como o terminal não é interativo e o `sshpass` não está instalado, o teste usa `SSH_ASKPASS`:
+
+```bash
+ASKPASS=$(mktemp /tmp/askpass.XXXXXX)
+printf '#!/bin/sh\necho victim123\n' > "$ASKPASS"
+chmod 700 "$ASKPASS"
+SSH_ASKPASS="$ASKPASS" SSH_ASKPASS_REQUIRE=force DISPLAY=:0 \
+  ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no victim@192.168.122.50 \
+  'whoami; hostname; id -nG; ip -4 -brief addr; dpkg -l openssh-server | tail -1'
+rm -f "$ASKPASS"
+```
+
+Saída observada: usuário `victim`, hostname `victim`, grupos `victim adm sudo`, interface `enp1s0` em `192.168.122.50/24` e `openssh-server` instalado.
+
+- Senha exigida no `sudo` (confirmado com `sudo -n true`, resposta `sudo: a password is required`).
+- IP fixo confirmado após reinício: a VM voltou ao ar no mesmo `192.168.122.50` pela reserva de DHCP.
+- Snapshot limpo `clean-install`, criado com a VM desligada, antes de qualquer configuração de agente, de serviços frágeis ou de ataques.
+
 ## Especificação da VM
 
 | Item | Valor |
@@ -70,6 +93,7 @@ Desvios em relação à descrição da atividade no `ROADMAP.md`: a VM usa cloud
 3. `virsh` sem `--connect` usa `qemu:///session` para usuário comum, onde a rede `default` não existe (`Network not found: no network with matching name 'default'`). Todas as operações passaram a usar `-c qemu:///system` e o script exporta `LIBVIRT_DEFAULT_URI`.
 4. `virt-install` falhou com `Cannot access storage file '/home/jessica/vms/victim.qcow2' (as uid:64055)`: o QEMU dos domínios de sistema roda como `libvirt-qemu` e não atravessa o diretório pessoal. Resolvido com ACL em `$HOME` e em `~/vms`.
 5. `virsh domifaddr victim --source arp` falha no kernel do WSL2 com `internal error: wrong nlmsg len`. Como o script usa `set -e` e `pipefail`, o erro dentro da substituição de comando encerrava o script em silêncio, antes da mensagem de timeout. A espera pelo IP passou a consultar o lease do dnsmasq com `virsh net-dhcp-leases default`.
+6. (T07) O teste do login por senha precisava ser não interativo, e o `sshpass` não está instalado. Resolvido com `SSH_ASKPASS` apontando para um script temporário com a senha, mais `SSH_ASKPASS_REQUIRE=force`, que é o caminho nativo do OpenSSH e dispensa pacote novo.
 
 ## Aprendizados e avisos (handoff)
 
@@ -80,6 +104,9 @@ Desvios em relação à descrição da atividade no `ROADMAP.md`: a VM usa cloud
 - Reiniciar o WSL2 derruba a VM; subir com `virsh -c qemu:///system start victim`. O autostart do domínio está desabilitado.
 - O script recria a rede `default` (`net-destroy` e `net-start`) para aplicar a reserva; não rodar com outras VMs dessa rede em uso.
 - Memória: o WSL2 tem 7,6 GB e o Wazuh consome cerca de 3,5 GB; a VM usa 2 GB. Conferir folga antes de subir o Shuffle (T18 e T19).
+- Acesso à VM: `ssh victim@192.168.122.50`, senha `victim123` (a mesma do `sudo`).
+- Reverter ao estado limpo: com a VM desligada, `virsh -c qemu:///system snapshot-revert victim --snapshotname clean-install`. Reverter descarta tudo o que foi feito depois do snapshot, incluindo o agente Wazuh.
+- O snapshot `clean-install` é o estado pós-instalação. Depois da T10, com o agente validado, vale criar um segundo ponto de retorno com a configuração base do laboratório.
 
 ## Entregáveis
 
@@ -93,4 +120,5 @@ Desvios em relação à descrição da atividade no `ROADMAP.md`: a VM usa cloud
 
 - VM vítima no ar (2 vCPU, 2 GB, 20 GB), com IP fixo por reserva de DHCP e acessível da máquina SOC; criação reproduzível por script a partir de cloud image.
 - A dificuldade mais instrutiva foi o QEMU dos domínios de sistema rodar como `libvirt-qemu`: o storage no diretório pessoal exigiu ACL, e a detecção de IP precisou abandonar o `domifaddr --source arp`, quebrado no kernel do WSL2.
-- Próximo passo da semana: T07, validar o acesso ssh com o usuário de teste e criar o snapshot limpo da VM.
+- T07 entregou o acesso por ssh validado por senha, o IP fixo confirmado após reinício e o snapshot `clean-install` como ponto de retorno antes de qualquer configuração de agente ou de ataque.
+- Próximo passo da semana: T08, liberar as portas do Wazuh no firewall da máquina SOC.

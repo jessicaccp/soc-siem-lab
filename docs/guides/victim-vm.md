@@ -1,4 +1,4 @@
-# Guia: VM vítima (T05)
+# Guia: VM vítima (T05 e T07)
 
 Passo a passo para reproduzir a VM vítima (Ubuntu 22.04 server, KVM/libvirt no host do projeto) em uma máquina nova.
 
@@ -60,7 +60,37 @@ nc -z 192.168.122.50 22
 ssh victim@192.168.122.50
 ```
 
+Login por senha sem terminal interativo (dispensa `sshpass`):
+
+```bash
+ASKPASS=$(mktemp /tmp/askpass.XXXXXX)
+printf '#!/bin/sh\necho victim123\n' > "$ASKPASS"
+chmod 700 "$ASKPASS"
+SSH_ASKPASS="$ASKPASS" SSH_ASKPASS_REQUIRE=force DISPLAY=:0 \
+  ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no victim@192.168.122.50 'hostname; id -nG'
+rm -f "$ASKPASS"
+```
+
 O `virsh domifaddr victim --source arp` responde `internal error: wrong nlmsg len` no kernel do WSL2; o método que funciona é ler o lease do dnsmasq com `virsh net-dhcp-leases default`.
+
+## 5. Snapshot e retorno ao estado limpo
+
+Com a VM desligada:
+
+```bash
+virsh -c qemu:///system shutdown victim
+virsh -c qemu:///system snapshot-create-as --name clean-install \
+  --description "Ubuntu 22.04 cloud image, sshd with password auth, test user victim" victim
+virsh -c qemu:///system start victim
+```
+
+Para voltar ao estado limpo (descarta tudo o que veio depois):
+
+```bash
+virsh -c qemu:///system shutdown victim
+virsh -c qemu:///system snapshot-revert victim --snapshotname clean-install
+virsh -c qemu:///system start victim
+```
 
 ## Especificação
 
