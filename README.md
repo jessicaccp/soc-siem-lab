@@ -4,9 +4,9 @@ Projeto da disciplina Tópicos Especiais em Segurança (PPGCC/UECE, prof. Rafael
 
 ## Status
 
-- Semana atual: 2 (21/09/2026), vítima e NIDS no ar: T05, T07 e T08 concluídas; T09, T10 e T12 a T17 pendentes.
-- Concluídas: 9 de 56 atividades.
-- Próxima atividade: T09, instalar e registrar o agente Wazuh na VM.
+- Semana atual: 2 (21/09/2026), vítima e NIDS no ar: T05, T07, T08 e T09 concluídas; T10 e T12 a T17 pendentes.
+- Concluídas: 10 de 56 atividades.
+- Próxima atividade: T10, validar a coleta de logs e o status Active do agente.
 
 Painel completo em [`docs/status.md`](docs/status.md), atualizado a cada pull request.
 

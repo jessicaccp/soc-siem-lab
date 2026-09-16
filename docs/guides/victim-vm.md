@@ -96,6 +96,25 @@ virsh -c qemu:///system start victim
 
 A especificação da VM (recursos, rede, disco, credenciais de teste) fica em `docs/reports/T05-create-vm.md`.
 
+## Agente Wazuh (T09)
+
+O script `scripts/vm/install-wazuh-agent.sh` roda dentro da VM e instala o agente casado com a versão do manager, apontando para a ponte `virbr0` (`192.168.122.1`). Copiar e executar com root:
+
+```bash
+scp scripts/vm/install-wazuh-agent.sh victim@192.168.122.50:/tmp/
+ssh victim@192.168.122.50 'sudo bash /tmp/install-wazuh-agent.sh'
+```
+
+Verificação, na VM e no manager:
+
+```bash
+sudo cat /var/ossec/etc/client.keys
+sudo systemctl is-enabled wazuh-agent; sudo systemctl is-active wazuh-agent
+docker exec wazuh-wazuh.manager-1 /var/ossec/bin/agent_control -l
+```
+
+O agente aparece como `Active` no manager depois do primeiro keepalive, cerca de um minuto após a instalação.
+
 ## Notas
 
 - O URI padrão do `virsh` para o usuário comum é `qemu:///session`, onde a rede `default` não existe. Usar `virsh -c qemu:///system` ou exportar `LIBVIRT_DEFAULT_URI=qemu:///system`. O script já exporta a variável.
