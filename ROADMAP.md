@@ -258,7 +258,7 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 #### T08: Liberar as portas do Wazuh no firewall da máquina SOC
 - Semana: 2. Ordem: 3. Prioridade: P0. Pré-requisitos: T06.
 - Descrição: no firewall da máquina SOC (firewalld, ufw ou nftables, conforme a distribuição), liberar 1514/tcp (eventos dos agentes), 1515/tcp (registro/enroll de agentes), 55000/tcp (comunicação de autenticação de agentes, quando aplicável) e 443/tcp (dashboard) apenas para a rede local de lab (zona public ou serviço custom); documentar as regras; validar com nmap a partir da máquina vítima.
-- Entregável: portas acessíveis da máquina vítima para a máquina SOC; regras documentadas no README.
+- Entregável: portas acessíveis da máquina vítima para a máquina SOC; regras documentadas em `docs/guides/start-wazuh-stack.md`.
 
 #### T09: Instalar e registrar o Wazuh agent na VM
 - Semana: 2. Ordem: 4. Prioridade: P0. Pré-requisitos: T07, T06, T08.

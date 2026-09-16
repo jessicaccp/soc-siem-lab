@@ -4,9 +4,9 @@ Projeto da disciplina Tópicos Especiais em Segurança (PPGCC/UECE, prof. Rafael
 
 ## Status
 
-- Semana atual: 2 (21/09/2026), vítima e NIDS no ar: T05, T07 a T10 e T12 a T17.
-- Concluídas: 6 de 56 atividades (semana 1 fechada).
-- Próxima atividade: T05, preparar a virtualização e criar a VM vítima.
+- Semana atual: 2 (21/09/2026), vítima e NIDS no ar: T05, T07 e T08 concluídas; T09, T10 e T12 a T17 pendentes.
+- Concluídas: 9 de 56 atividades.
+- Próxima atividade: T09, instalar e registrar o agente Wazuh na VM.
 
 Painel completo em [`docs/status.md`](docs/status.md), atualizado a cada pull request.
 
@@ -56,6 +56,31 @@ docker compose up -d
 ```
 
 Dashboard em `https://localhost`, com as credenciais de teste de `configs/wazuh/.env.example`. Procedimento completo, verificação e comandos de parada em [`docs/guides/start-wazuh-stack.md`](docs/guides/start-wazuh-stack.md). Suricata e Shuffle entram nas semanas 2 e 3.
+
+## Portas expostas
+
+A máquina SOC não tem firewall ativo (`firewalld`, `ufw`, `nftables` e `iptables` estão inativos), então as portas ficam abertas pela publicação do Docker Compose, sem filtro por origem.
+
+| Porta | Serviço | Publicação no host | Usada por |
+|---|---|---|---|
+| 1514/tcp | Wazuh manager, eventos dos agentes | `0.0.0.0` | Agente da VM vítima (T09) |
+| 1515/tcp | Wazuh manager, registro de agentes | `0.0.0.0` | Registro do agente (T09) |
+| 55000/tcp | Wazuh manager, API | `0.0.0.0` | Consultas e integrações (T21) |
+| 443/tcp | Wazuh dashboard | `0.0.0.0` | Acesso pelo navegador |
+| 514/udp | Wazuh manager, syslog | `0.0.0.0` | Coleta por syslog |
+| 9200/tcp | Wazuh indexer | `127.0.0.1` | Uso interno da stack |
+
+O endereço da máquina SOC na rede do laboratório é `192.168.122.1`, a ponte `virbr0` do libvirt. É esse o valor que o agente usa como `WAZUH_MANAGER` na T09.
+
+Validação a partir da VM vítima (`192.168.122.50`):
+
+```bash
+nmap -Pn -p 1514,1515,55000,443 192.168.122.1
+```
+
+Executado em 15/09/2026: as quatro portas abertas.
+
+Pendente: restringir a origem à rede do laboratório (`192.168.122.0/24`). Sem firewall, as portas respondem também na interface `eth0` do WSL2. A restrição depende de decisão de hardening (semana 8), porque afeta o acesso ao dashboard pelo navegador do Windows (`docs/open-questions.md`).
 
 ## Repositório
 

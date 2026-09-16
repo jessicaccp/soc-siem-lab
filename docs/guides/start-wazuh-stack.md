@@ -8,8 +8,28 @@ Subir o Wazuh single-node (manager, indexer e dashboard) da máquina SOC a parti
 
 - Docker CE com o plugin Docker Compose (ver `install-docker.md`).
 - `vm.max_map_count` igual ou maior que 262144 no host, exigência do indexer. Conferir com `cat /proc/sys/vm/max_map_count` e ajustar com `sudo sysctl -w vm.max_map_count=262144`.
-- Portas livres no host: 443 (dashboard), 1514 e 1515 (agentes), 55000 (API do manager) e 9200 (indexer, publicado apenas em 127.0.0.1).
 - Cerca de 2 GB de imagens e 2 GB de RAM durante a execução.
+
+## Portas e publicação
+
+| Porta | Serviço | Publicação no host | Usada por |
+|---|---|---|---|
+| 1514/tcp | Wazuh manager, eventos dos agentes | `0.0.0.0` | Agente da VM vítima (`victim-vm.md`) |
+| 1515/tcp | Wazuh manager, registro de agentes | `0.0.0.0` | Registro do agente |
+| 514/udp | Wazuh manager, syslog | `0.0.0.0` | Coleta por syslog |
+| 55000/tcp | Wazuh manager, API | `0.0.0.0` | Consultas e integrações |
+| 9200/tcp | Wazuh indexer | `127.0.0.1` | Uso interno da stack |
+| 443/tcp | Wazuh dashboard | `0.0.0.0` | Acesso pelo navegador |
+
+As publicações são as do `configs/wazuh/docker-compose.yml`. O endereço da máquina SOC na rede do laboratório é `192.168.122.1`, a ponte `virbr0` do libvirt; é o valor que o agente usa como `WAZUH_MANAGER`.
+
+A máquina SOC não tem firewall ativo (`firewalld`, `ufw`, `nftables` e `iptables` estão inativos), então as portas ficam abertas pela publicação do Docker, sem filtro por origem, e respondem também na interface `eth0` do WSL2. Restringir a origem à rede do laboratório está em `docs/open-questions.md` como pendência de hardening.
+
+Validação a partir da VM vítima, executada em 15/09/2026:
+
+```bash
+nmap -Pn -p 1514,1515,55000,443 192.168.122.1   # as quatro portas abertas
+```
 
 ## Passos
 
