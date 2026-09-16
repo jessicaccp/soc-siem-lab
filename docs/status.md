@@ -9,10 +9,10 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 ## Resumo
 
 - Última atualização: 15/09/2026
-- Concluídas: 11 de 56
+- Concluídas: 12 de 56
 - Semana atual: 2 (21/09/2026), Vítima e NIDS no ar
-- Pendente da semana: T12 a T17
-- Próxima atividade: T12, subir o Suricata em container com network_mode host
+- Pendente da semana: T13 a T17
+- Próxima atividade: T13, baixar pcaps maliciosos e testar em modo pcap
 
 ## Semana 0 (28/08/2026): Definições iniciais (2/2)
 
@@ -39,6 +39,7 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T08 | Liberar as portas do Wazuh no firewalld da máquina SOC | P0 | done | [T08](reports/T08-open-wazuh-ports.md) |
 | T09 | Instalar e registrar o Wazuh agent na VM | P0 | done | [T09](reports/T09-wazuh-agent.md) |
 | T10 | Validar a coleta de logs e o status Active do agente | P0 | done | [T10](reports/T10-validate-agent.md) |
+| T12 | Subir o Suricata em container com network_mode host | P0 | done | [T12](reports/T12-suricata.md) |
 | T09 | Instalar e registrar o Wazuh agent na VM | P0 | pendente | |
 | T10 | Validar a coleta de logs e o status Active do agente | P0 | pendente | |
 | T12 | Subir o Suricata em container com network_mode host | P0 | pendente | |
