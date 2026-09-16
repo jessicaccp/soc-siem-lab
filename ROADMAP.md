@@ -444,7 +444,7 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 
 #### T44: Documentar a arquitetura final
 - Semana: 8. Ordem: 1. Prioridade: P0. Pré-requisitos: T37, T41.
-- Descrição: escrever `docs/architecture.md`: diagrama final (atualizado), portas abertas, fluxo de dados, decisões (apontando para este roadmap e para `docs/decisions.md`), credenciais de teste (sem segredos reais); atualizar o README com o procedimento de reprodução completo (comandos exatos, ordem, tempo esperado); conferir consistência com o código do repo.
+- Descrição: escrever `docs/architecture.md` como dono das portas abertas e do fluxo de dados: diagrama final (atualizado), portas abertas, decisões (apontando para este roadmap e para `docs/decisions.md`), credenciais de teste (sem segredos reais); mover para ele o conteúdo de portas que hoje está em `docs/guides/start-wazuh-stack.md` e deixar link no guia; manter o `README.md` como resumo com ponteiros, sem duplicar procedimentos, que ficam em `docs/guides/`; conferir consistência com o código do repo.
 - Entregável: documentação completa e consistente.
 
 #### T45: Verificação técnica da documentação da arquitetura

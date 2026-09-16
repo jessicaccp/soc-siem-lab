@@ -30,6 +30,21 @@ Regras para quem edita este repositório. Fonte da verdade da disciplina: `traba
 - Toda decisão técnica nova: registrar em `docs/decisions.md`.
 - Edição do `ROADMAP.md`: mínima. Só alterar por decisão de mudança forte (escopo, arquitetura, datas). Ajustes pontuais vão para os relatórios ou para `docs/open-questions.md`.
 
+## Dono de cada informação
+
+Cada informação tem um único arquivo dono. O mesmo conteúdo em dois arquivos diverge com o tempo, então menção é link, nunca cópia.
+
+- `README.md`: porta de entrada, o mínimo para entender e subir o projeto. Visão geral, comandos de subida e ponteiros. Sem tabela de portas, sem detalhe operacional, sem histórico e sem pendências.
+- `ROADMAP.md`: plano, decisões de arquitetura, diagrama e fluxo de dados, cronograma.
+- `docs/status.md`: painel das atividades e link de cada relatório.
+- `docs/open-questions.md`: o que não está decidido, riscos e pendências de hardening.
+- `docs/reports/`: o que foi executado em cada atividade, com evidências. É registro histórico: não reescrever para refletir mudanças posteriores.
+- `docs/guides/`: procedimentos passo a passo. Dono das portas publicadas, dos comandos de verificação e do estado validado de cada serviço.
+- `docs/architecture.md` (T44): passa a ser o dono das portas abertas e do fluxo de dados; ao criá-lo, mover o conteúdo dos guias e deixar links.
+- `docs/decisions.md` (T35): decisões técnicas; o `ROADMAP.md` passa a resumir e apontar.
+
+Ao criar um dono novo para um assunto, mover o conteúdo e deixar links nos arquivos que o citavam.
+
 ## Como trabalhar neste repositório
 
 - Antes de editar: ler `ROADMAP.md`, a seção da atividade alvo (seção 6) e os relatórios dos pré-requisitos (seção "Aprendizados e avisos").

@@ -4,7 +4,7 @@ Registro de tudo que ainda não está decidido ou documentado no projeto. Pergun
 
 ## Em aberto
 
-- As portas do Wazuh (1514, 1515, 55000 e 443) estão publicadas em todas as interfaces da máquina SOC, porque não há firewall ativo no WSL2. Restringir a origem à rede do laboratório (`192.168.122.0/24`) exige decidir entre alterar os binds no compose e usar regras `DOCKER-USER`; a segunda opção mantém o acesso pelo navegador do Windows, que chega pela interface `eth0`. Decisão para a semana 8 (hardening).
+- As portas do Wazuh estão publicadas em todas as interfaces da máquina SOC, porque não há firewall ativo no WSL2 (lista e publicação em `docs/guides/start-wazuh-stack.md`). Restringir a origem à rede do laboratório (`192.168.122.0/24`) exige decidir entre alterar os binds no compose e usar regras `DOCKER-USER`; a segunda opção mantém o acesso pelo navegador do Windows, que chega pela interface `eth0`. Decisão para a semana 8 (hardening).
 - Na T48, confirmar se prender o dashboard em `127.0.0.1` mantém o acesso pelo navegador do Windows. Hoje o acesso funciona por `localhost` do WSL2 e a porta 443 está publicada em todas as interfaces.
 
 ## Resolvidas

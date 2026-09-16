@@ -26,6 +26,7 @@ Nota: os arquivos marcados com "Criado em" (ex.: decisions.md na T35, architectu
 3. **Quando preencher**: após concluir a atividade (ou após a entrega de várias atividades).
 4. **Status**: `done` (concluída e aceita) ou `partial` (em andamento, com o que falta listado).
 5. **Aprendizados e avisos**: leitura obrigatória antes de começar uma atividade dependente e ao retomar o projeto depois de uma pausa.
+6. **Dono único**: cada informação tem um arquivo dono, listado em `AGENTS.md`, seção "Dono de cada informação". Os demais arquivos apenas linkam o conteúdo, nunca o copiam.
 
 ## Fluxo semanal
 
