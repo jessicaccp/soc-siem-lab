@@ -8,11 +8,11 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 
 ## Resumo
 
-- Última atualização: 13/09/2026
-- Concluídas: 6 de 56
+- Última atualização: 15/09/2026
+- Concluídas: 7 de 56
 - Semana atual: 2 (21/09/2026), Vítima e NIDS no ar
-- Pendente da semana: T05, T07 a T10 e T12 a T17
-- Próxima atividade: T05, preparar a virtualização e criar a VM vítima
+- Pendente da semana: T07 a T10 e T12 a T17
+- Próxima atividade: T07, instalar o SO na VM e liberar o acesso ssh
 
 ## Semana 0 (28/08/2026): Definições iniciais (2/2)
 
@@ -30,11 +30,11 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T06 | Subir o Wazuh single-node | P0 | done | [T06](reports/T06-start-wazuh.md) |
 | T11 | Gate do acompanhamento 1 | P0 | done | [T11](reports/T11-gate-week-1.md) |
 
-## Semana 2 (21/09/2026): Vítima e NIDS no ar (0/11)
+## Semana 2 (21/09/2026): Vítima e NIDS no ar (1/11)
 
 | ID | Atividade | Prioridade | Status | Relatório |
 |---|---|---|---|---|
-| T05 | Preparar a virtualização e criar a VM vítima | P0 | pendente | |
+| T05 | Preparar a virtualização e criar a VM vítima | P0 | done | [T05](reports/T05-create-vm.md) |
 | T07 | Instalar o SO na VM e liberar o acesso ssh | P0 | pendente | |
 | T08 | Liberar as portas do Wazuh no firewalld da máquina SOC | P0 | pendente | |
 | T09 | Instalar e registrar o Wazuh agent na VM | P0 | pendente | |
