@@ -5,7 +5,7 @@ set -euo pipefail
 
 MANAGER_IP="${WAZUH_MANAGER:-192.168.122.1}"
 AGENT_NAME="${WAZUH_AGENT_NAME:-victim}"
-AGENT_VERSION="${WAZUH_AGENT_VERSION:-4.14.7}"
+AGENT_VERSION="${WAZUH_AGENT_VERSION:-4.14.7}"   # matches WAZUH_IMAGE_VERSION in configs/wazuh/.env
 
 export DEBIAN_FRONTEND=noninteractive
 

@@ -21,12 +21,12 @@ Nota: os arquivos marcados com "Criado em" (ex.: decisions.md na T35, architectu
 
 ## Convenções
 
-1. **Idioma**: código, pastas e nomes de arquivos em inglês; o conteúdo dos documentos (docs/) em português.
-2. **Relatório por atividade**: um arquivo por atividade em `docs/reports/` (ex.: `T06-start-wazuh.md`), sempre usando o `TEMPLATE.md`. O relatório também pode cobrir **várias atividades** (ex.: as da mesma semana), listando todos os IDs nos metadados e separando os pontos por atividade. Nome do arquivo: pelos IDs ou pela semana (ex.: `week-04.md`).
-3. **Quando preencher**: após concluir a atividade (ou após a entrega de várias atividades).
-4. **Status**: `done` (concluída e aceita) ou `partial` (em andamento, com o que falta listado).
-5. **Aprendizados e avisos**: leitura obrigatória antes de começar uma atividade dependente e ao retomar o projeto depois de uma pausa.
-6. **Dono único**: cada informação tem um arquivo dono, listado em `AGENTS.md`, seção "Dono de cada informação". Os demais arquivos apenas linkam o conteúdo, nunca o copiam.
+As regras de escrita, idioma e status dos relatórios são as de [`AGENTS.md`](../AGENTS.md), seção "Convenções obrigatórias". O que é específico do sistema de docs:
+
+1. **Relatório por atividade**: um arquivo por atividade em `docs/reports/` (ex.: `T06-start-wazuh.md`), sempre usando o `TEMPLATE.md`. O relatório também pode cobrir **várias atividades** (ex.: as da mesma semana), listando todos os IDs nos metadados e separando os pontos por atividade. Nome do arquivo: pelos IDs ou pela semana (ex.: `week-04.md`).
+2. **Quando preencher**: após concluir a atividade (ou após a entrega de várias atividades).
+3. **Aprendizados e avisos**: leitura obrigatória antes de começar uma atividade dependente e ao retomar o projeto depois de uma pausa.
+4. **Guia por tópico**: procedimento passo a passo em `docs/guides/`, no formato objetivo, pré-requisitos, passos, verificação.
 
 ## Fluxo semanal
 

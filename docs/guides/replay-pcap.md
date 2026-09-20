@@ -1,6 +1,8 @@
 # Replay de pcaps maliciosos
 
-Valida as regras carregadas no Suricata com pcaps públicos de tráfego malicioso, em modo offline, sem interferir na captura live.
+## Objetivo
+
+Validar as regras carregadas no Suricata com pcaps públicos de tráfego malicioso, em modo offline, sem interferir na captura live.
 
 ## Pré-requisitos
 

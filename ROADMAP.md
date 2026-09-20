@@ -230,7 +230,7 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 
 #### T04: Criar a estrutura de pastas e refinar o README
 - Semana: 1. Ordem: 2. Prioridade: P0. Pré-requisitos: T01.
-- Descrição: o repositório público já existe desde a T01; criar as pastas restantes da estrutura (`configs/suricata/`, `configs/wazuh/`, `configs/shuffle/`, `scripts/attacks/`, `scripts/demo/`, `assets/`, ver seção 9), ajustar o `.gitignore` (pcaps grandes, .env com credenciais, certificados do Wazuh) e refinar o README.md (visão geral, arquitetura resumida, como subir).
+- Descrição: o repositório público já existe desde a T01; criar as pastas restantes da estrutura (`configs/suricata/`, `configs/wazuh/`, `configs/shuffle/`, `scripts/attacks/`, `scripts/demo/`, `assets/`), ajustar o `.gitignore` (pcaps grandes, .env com credenciais, certificados do Wazuh) e refinar o README.md (visão geral, arquitetura resumida, como subir).
 - Entregável: repositório público clonável com estrutura e README.
 
 #### T06: Subir o Wazuh single-node
@@ -531,32 +531,10 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 
 ## 8. Perguntas em aberto
 
-As perguntas em aberto ficam em `docs/open-questions.md`; as resolvidas viram decisões registradas em `docs/decisions.md` (criado na T35). Histórico já resolvido:
-
-1. Acompanhamento com demo ao vivo e repositório público (GitHub).
-2. Vítima em VM (KVM) na máquina vítima, ambiente isolado do uso diário.
-3. Escopo do projeto: individual, com IDs T## em ordem de execução, prioridade P0/P1, gate de aceite por semana e matriz de cobertura.
-4. Máquinas: as duas ficam disponíveis durante todo o semestre e podem rodar em paralelo na apresentação; o Grafana entra como atividade opcional (T32).
+As perguntas em aberto e o histórico das já resolvidas ficam em `docs/open-questions.md`; as resolvidas viram decisões registradas em `docs/decisions.md` (criado na T35).
 
 ---
 
-## 9. Estrutura futura do repositório (planejada, ainda não criada)
+## 9. Estrutura do repositório
 
-```
-soc-siem-lab/
-├── README.md            # visão geral, arquitetura, como subir
-├── docker-compose.yml   # Wazuh, Suricata, Shuffle
-├── docs/                # documentos em português
-│   ├── README.md        # índice e convenções dos docs
-│   ├── reports/         # relatórios por atividade (1 por atividade)
-│   ├── guides/          # guias passo a passo de reprodução
-│   └── ...              # architecture, decisions, demo-guide, faq
-├── configs/
-│   ├── suricata/        # regras custom, integração com Wazuh
-│   ├── wazuh/           # regras custom, ossec.conf, integração Shuffle
-│   └── shuffle/         # exportação dos workflows
-├── scripts/
-│   ├── attacks/         # nmap, hydra, simulação do Wazuh
-│   └── demo/            # script único do cenário end-to-end
-└── assets/              # pcaps, prints, vídeo da demo
-```
+A estrutura de pastas é a tabela do `README.md` e o índice dos documentos é o `docs/README.md`.

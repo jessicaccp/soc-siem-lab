@@ -4,10 +4,7 @@ Projeto da disciplina Tópicos Especiais em Segurança (PPGCC/UECE, prof. Rafael
 
 ## Status
 
-- Semana atual: 2 (21/09/2026), vítima e NIDS no ar.
-- Concluídas: 13 de 56 atividades.
-
-Painel completo, com o link de cada relatório, em [`docs/status.md`](docs/status.md).
+Painel das 56 atividades, com o status e o link de cada relatório, em [`docs/status.md`](docs/status.md).
 
 ## Visão geral
 
