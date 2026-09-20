@@ -5,7 +5,7 @@ Projeto da disciplina Tópicos Especiais em Segurança (PPGCC/UECE, prof. Rafael
 ## Status
 
 - Semana atual: 2 (21/09/2026), vítima e NIDS no ar.
-- Concluídas: 12 de 56 atividades.
+- Concluídas: 13 de 56 atividades.
 
 Painel completo, com o link de cada relatório, em [`docs/status.md`](docs/status.md).
 
@@ -35,6 +35,8 @@ docker compose up -d
 Dashboard em `https://localhost`. Procedimento completo, portas e verificação em [`docs/guides/start-wazuh-stack.md`](docs/guides/start-wazuh-stack.md).
 
 A máquina SOC precisa de Docker CE com o plugin Compose (instalação e versões validadas em [`docs/guides/install-docker.md`](docs/guides/install-docker.md)). A VM vítima, com o agente Wazuh, é criada pelo guia [`docs/guides/victim-vm.md`](docs/guides/victim-vm.md).
+
+A vigilância de rede (Suricata) sobe separada, a partir de `configs/suricata/`: procedimento em [`docs/guides/start-suricata.md`](docs/guides/start-suricata.md) e teste das regras com pcaps públicos em [`docs/guides/replay-pcap.md`](docs/guides/replay-pcap.md).
 
 ## Documentação
 

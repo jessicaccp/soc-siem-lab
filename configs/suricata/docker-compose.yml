@@ -19,3 +19,5 @@ services:
       - ./config:/etc/suricata
       - ./logs:/var/log/suricata
       - ./lib:/var/lib/suricata
+      # pcaps públicos para replay em modo offline (T13).
+      - ../../assets/pcaps:/pcaps:ro
