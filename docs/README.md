@@ -10,14 +10,14 @@
 | `ROADMAP.md` (raiz) | Planejamento completo: decisões, arquitetura, atividades por semana, riscos | Aula 00 |
 | `docs/architecture.md` | Arquitetura final (diagrama, portas, fluxo de dados) | Atividade T44 |
 | `docs/decisions.md` | Decisões técnicas tomadas ao longo do projeto | Atividade T35 |
-| `docs/demo-guide.md` | Roteiro da apresentação final | Atividade T42 |
+| `docs/demo-guide.md` | Roteiro da demonstração e índice das evidências visuais | Atividade T42 (iniciado na semana 2) |
 | `docs/faq.md` | Respostas para perguntas prováveis da arguição | Atividade T56 |
 | `docs/open-questions.md` | Perguntas em aberto (tudo que ainda não está decidido) | Sempre que necessário |
 | `docs/status.md` | Status das 56 atividades e índice dos relatórios | Atualizado a cada pull request |
 | `docs/reports/` | Relatórios por atividade (um arquivo por atividade) | Sempre que uma atividade conclui |
 | `docs/guides/` | Guias passo a passo de reprodução (VM, agente, dashboards, replay de pcaps) | Quando um procedimento precisa ser ensinado |
 
-Nota: os arquivos marcados com "Criado em" (ex.: decisions.md na T35, architecture.md na T44, demo-guide.md na T42, faq.md na T56) ainda não existem no repositório; são criados na atividade indicada, conforme o ROADMAP.md.
+Nota: os arquivos marcados com "Criado em" (ex.: decisions.md na T35, architecture.md na T44, faq.md na T56) ainda não existem no repositório; são criados na atividade indicada, conforme o ROADMAP.md.
 
 ## Convenções
 
