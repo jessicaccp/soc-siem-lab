@@ -13,3 +13,6 @@ assets/*.mp4
 
 # SO
 .DS_Store
+
+# Vídeos de documentação (gerados por scripts/media)
+assets/media/

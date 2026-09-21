@@ -1,0 +1,26 @@
+#cloud-config
+hostname: victim
+manage_etc_hosts: true
+fqdn: victim.lab
+
+users:
+  - name: victim
+    gecos: Victim test account
+    groups: [adm, sudo]
+    sudo: ALL=(ALL) ALL
+    lock_passwd: false
+    passwd: "$6$B0ekxINAg8d00j4i$82sFqd./4/nVb4fTTGYN8wP/28zR3hVEkkZZghYWCtbycmB.c00rsT7s7tPvzdIhR9Jw83hv9CTs01siqrhqe1"
+    shell: /bin/bash
+
+ssh_pwauth: true
+disable_root: true
+
+write_files:
+  - path: /etc/ssh/sshd_config.d/99-lab-password-auth.conf
+    permissions: '0644'
+    content: |
+      PasswordAuthentication yes
+      KbdInteractiveAuthentication yes
+
+runcmd:
+  - systemctl restart ssh

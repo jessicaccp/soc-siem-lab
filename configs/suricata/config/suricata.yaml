@@ -1,0 +1,97 @@
+%YAML 1.1
+---
+# Configuração do Suricata usado no laboratório (T12).
+# Cobre o essencial do NIDS e do NSM: regras ET Open e eve.json com alertas e
+# logs de transação usados pela integração com o Wazuh (T14 a T16).
+suricata-version: "7.0"
+
+vars:
+  address-groups:
+    HOME_NET: "[192.168.0.0/16,10.0.0.0/8,172.16.0.0/12]"
+    EXTERNAL_NET: "!$HOME_NET"
+    HTTP_SERVERS: "$HOME_NET"
+    SMTP_SERVERS: "$HOME_NET"
+    SQL_SERVERS: "$HOME_NET"
+    DNS_SERVERS: "$HOME_NET"
+    TELNET_SERVERS: "$HOME_NET"
+    AIM_SERVERS: "$EXTERNAL_NET"
+    DC_SERVERS: "$HOME_NET"
+    DNP3_SERVER: "$HOME_NET"
+    DNP3_CLIENT: "$HOME_NET"
+    MODBUS_CLIENT: "$HOME_NET"
+    MODBUS_SERVER: "$HOME_NET"
+    ENIP_CLIENT: "$HOME_NET"
+    ENIP_SERVER: "$HOME_NET"
+  port-groups:
+    HTTP_PORTS: "80"
+    SHELLCODE_PORTS: "!80"
+    ORACLE_PORTS: 1521
+    SSH_PORTS: 22
+    DNP3_PORTS: 20000
+    MODBUS_PORTS: 502
+    FILE_DATA_PORTS: "[$HTTP_PORTS,110,143]"
+    FTP_PORTS: 21
+    GENEVE_PORTS: 6081
+    VXLAN_PORTS: 4789
+    TEREDO_PORTS: 3544
+
+default-log-dir: /var/log/suricata/
+
+# A interface de captura vem do SURICATA_OPTIONS no compose; esta seção define os
+# parâmetros de captura para qualquer interface, e é exigida no modo live
+# mesmo quando o `-i` é passado na linha de comando.
+af-packet:
+  - interface: default
+    cluster-id: 99
+    cluster-type: cluster_flow
+    defrag: yes
+    use-mmap: yes
+    tpacket-v3: yes
+    ring-size: 2048
+    block-size: 32768
+
+default-rule-path: /var/lib/suricata/rules
+rule-files:
+  - suricata.rules
+
+stats:
+  enabled: yes
+  interval: 60
+
+outputs:
+  - fast:
+      enabled: yes
+      filename: fast.log
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
+      types:
+        - alert:
+        - anomaly:
+            enabled: yes
+        - http:
+            extended: yes
+        - dns:
+        - tls:
+            extended: yes
+        - ssh
+        - flow
+        - stats:
+  # Segundo arquivo, só com alertas: é ele que o Wazuh lê (T14). O eve.json
+  # acima continua completo, com os logs de transação, para análise de tráfego.
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve-alerts.json
+      types:
+        - alert:
+
+logging:
+  default-log-level: notice
+  outputs:
+    - console:
+        enabled: yes
+    - file:
+        enabled: yes
+        filename: /var/log/suricata/suricata.log

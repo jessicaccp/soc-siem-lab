@@ -47,18 +47,18 @@ Datas-chave do calendário da disciplina:
 
 ## 2. Decisões de arquitetura e justificativas
 
-| #   | Decisão                  | Escolha                                                                                                                        | Justificativa                                                                                                                                                                                                          | Alternativas rejeitadas                                                                                                                                                                    |
-| --- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| D1  | Infraestrutura           | Docker Compose na máquina SOC (Linux com Docker CE)                                                                            | Reproduzível, versionável no git, reset rápido para demo; a stack roda em containers, então a distribuição do host não faz parte da solução; a vítima fica isolada na segunda máquina, na mesma rede                 | VMs para a stack (overhead de gerenciamento sem ganho; a VM fica reservada à vítima), cloud (custo e fricção), WSL2 (hoje é o host do projeto)                                             |
-| D2  | HIDS + SIEM + Dashboards | Wazuh (manager + indexer + dashboard)                                                                                          | Um único serviço cobre 3 caixas do slide; comunidade grande; regras prontas; script oficial de simulação de ataques para demo                                                                                          | Graylog (não faz HIDS, exigiria OSSEC/Auditd separado), OSSEC (mais antigo, sem dashboard moderno), Velociraptor (foco forense, não SIEM em tempo real), Auditd (só Linux e sem dashboard) |
-| D3  | NIDS                     | Suricata                                                                                                                       | Alertas nativos, regras atualizadas, melhor suporte a replay de pcap (padrão de teste de IDS); roda em container com network_mode host para sniffar a interface                                                        | Zeek (gera metadata/logs, não alertas nativos), Snort (mais datado, regras legacy)                                                                                                         |
-| D4  | SOAR                     | Shuffle                                                                                                                        | Única opção listada no slide; open-source; workflows visuais; integra com Wazuh via webhook                                                                                                                            | Nenhuma (obrigatória)                                                                                                                                                                      |
-| D5  | Dashboards extras        | Grafana fora do escopo obrigatório, como atividade opcional (T32)                                                              | O dashboard do Wazuh (fork do Kibana) já cobre "Grafana ou Kibana" do slide; sem restrição de RAM, o Grafana entra se houver folga na semana, para não competir com o caminho crítico                                  | Grafana como requisito (duplicaria esforço sem requisito novo), Kibana (o Wazuh dashboard já é um fork dele)                                                                               |
-| D6  | Alvo monitorado          | VM Linux (KVM) na máquina vítima                                                                                               | As duas máquinas ficam disponíveis durante todo o semestre, inclusive simultaneamente na apresentação; a VM isola o ambiente de ataque do uso diário, é descartável (snapshot/reset) e o KVM é nativo do host e leve   | Vítima instalada direto no host (suja a máquina de uso diário e mistura demos com o ambiente pessoal)                                                                                      |
-| D7  | Geração de detecção NIDS | Replay de pcaps maliciosos (malware-traffic-analysis.net) + ataques originados na máquina SOC                                  | Padrão da indústria para testar regras de IDS; alertas determinísticos; ataques originados no próprio host do SOC são visíveis ao Suricata (tráfego de saída da própria interface), imunes a AP isolation              | Confiar só no tráfego entre máquinas (WiFi com AP isolation pode esconder o tráfego dos dois sentidos)                                                                                     |
-| D8  | Geração de detecção HIDS | Ataques reais (nmap, hydra) contra a VM vítima + script de simulação do Wazuh                                                  | Prova o agente, as regras e o pipeline de ponta a ponta                                                                                                                                                                | Só simulação (menos convincente na demo)                                                                                                                                                   |
-| D9  | SOAR como diferencial    | Workflow: alerta crítico do Wazuh dispara bloqueio do IP atacante                                                              | É a camada que poucas equipes entregam funcionando; vira o destaque da apresentação final                                                                                                                              | SOAR só notificando (sem ação, não cumpre "executa ações")                                                                                                                                 |
-| D10 | Modo de execução         | Projeto individual, com uma sequência única de atividades (T01 a T56), prioridade P0/P1 e gate de aceite no fim de cada semana | A execução é sequencial por natureza: uma ordem única de atividades, com prioridades explícitas, evita paralelismo que não se sustenta; o acompanhamento é avaliado individualmente                                    | Divisão por caixa do slide (gera gargalo em projeto individual), reduzir o escopo (cortaria requisitos do slide)                                                                           |
+| #   | Decisão                  | Escolha                                                                                                                        | Justificativa                                                                                                                                                                                                                                                  | Alternativas rejeitadas                                                                                                                                                                    |
+| --- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| D1  | Infraestrutura           | Docker Compose na máquina SOC (Linux com Docker CE)                                                                            | Reproduzível, versionável no git, reset rápido para demo; a stack roda em containers, então a distribuição do host não faz parte da solução; a vítima fica isolada na segunda máquina, na mesma rede                                                           | VMs para a stack (overhead de gerenciamento sem ganho; a VM fica reservada à vítima), cloud (custo e fricção), WSL2 (hoje é o host do projeto)                                             |
+| D2  | HIDS + SIEM + Dashboards | Wazuh (manager + indexer + dashboard)                                                                                          | Um único serviço cobre 3 caixas do slide; comunidade grande; regras prontas; script oficial de simulação de ataques para demo                                                                                                                                  | Graylog (não faz HIDS, exigiria OSSEC/Auditd separado), OSSEC (mais antigo, sem dashboard moderno), Velociraptor (foco forense, não SIEM em tempo real), Auditd (só Linux e sem dashboard) |
+| D3  | NIDS                     | Suricata                                                                                                                       | Alertas nativos, regras atualizadas, melhor suporte a replay de pcap (padrão de teste de IDS); roda em container com network_mode host para sniffar a interface                                                                                                | Zeek (gera metadata/logs, não alertas nativos), Snort (mais datado, regras legacy)                                                                                                         |
+| D4  | SOAR                     | Shuffle                                                                                                                        | Única opção listada no slide; open-source; workflows visuais; integra com Wazuh via webhook                                                                                                                                                                    | Nenhuma (obrigatória)                                                                                                                                                                      |
+| D5  | Dashboards extras        | Grafana fora do escopo obrigatório, como atividade opcional (T32)                                                              | O dashboard do Wazuh (fork do Kibana) já cobre "Grafana ou Kibana" do slide; sem restrição de RAM, o Grafana entra se houver folga na semana, para não competir com o caminho crítico                                                                          | Grafana como requisito (duplicaria esforço sem requisito novo), Kibana (o Wazuh dashboard já é um fork dele)                                                                               |
+| D6  | Alvo monitorado          | VM Linux (KVM) no host do projeto (WSL2), em rede isolada do libvirt                                                           | Duas máquinas disponíveis durante todo o semestre e na apresentação; a VM isola o ambiente de ataque do uso diário, é descartável (snapshot/reset), o KVM é nativo e, com a VM no mesmo host, o tráfego passa pela ponte do libvirt e fica visível ao Suricata | Vítima instalada direto no host (suja a máquina de uso diário e mistura demos com o ambiente pessoal)                                                                                      |
+| D7  | Geração de detecção NIDS | Replay de pcaps maliciosos (malware-traffic-analysis.net) + ataques originados na máquina SOC                                  | Padrão da indústria para testar regras de IDS; alertas determinísticos; ataques originados no próprio host do SOC são visíveis ao Suricata (tráfego de saída da própria interface), imunes a AP isolation                                                      | Confiar só no tráfego entre máquinas (WiFi com AP isolation pode esconder o tráfego dos dois sentidos)                                                                                     |
+| D8  | Geração de detecção HIDS | Ataques reais (nmap, hydra) contra a VM vítima + script de simulação do Wazuh                                                  | Prova o agente, as regras e o pipeline de ponta a ponta                                                                                                                                                                                                        | Só simulação (menos convincente na demo)                                                                                                                                                   |
+| D9  | SOAR como diferencial    | Workflow: alerta crítico do Wazuh dispara bloqueio do IP atacante                                                              | É a camada que poucas equipes entregam funcionando; vira o destaque da apresentação final                                                                                                                                                                      | SOAR só notificando (sem ação, não cumpre "executa ações")                                                                                                                                 |
+| D10 | Modo de execução         | Projeto individual, com uma sequência única de atividades (T01 a T56), prioridade P0/P1 e gate de aceite no fim de cada semana | A execução é sequencial por natureza: uma ordem única de atividades, com prioridades explícitas, evita paralelismo que não se sustenta; o acompanhamento é avaliado individualmente                                                                            | Divisão por caixa do slide (gera gargalo em projeto individual), reduzir o escopo (cortaria requisitos do slide)                                                                           |
 
 ### 2.1 Cobertura dos requisitos do slide
 
@@ -80,35 +80,23 @@ Matriz de rastreabilidade entre o que o slide da disciplina exige e as atividade
 ## 3. Arquitetura da solução
 
 ```
-                        Rede local (WiFi ou cabo)
-   +--------------------------+        +--------------------------+
-   |  Máquina SOC             |        |  Máquina vítima          |
-   |  Linux                   |        |  Linux                   |
-   |  Docker Compose:         |        |  VM Linux (KVM):         |
-   |  - Wazuh manager+indexer |<-------|  - Wazuh agent           |
-   |  - Wazuh dashboard       | agente |  - SSH com senha fraca   |
-   |  - Suricata (host net)   | 1514   |  - Serviços frágeis      |
-   |  - Shuffle (SOAR)        |        |                          |
-   +------------^-------------+        +------------^-------------+
-                |                            ^
-        alertas |                            | ataques reais (nmap,
-        (webhook)|                           | hydra, metasploit
-                |                            | opcional): originados
-                |                            | na máquina SOC,
-                |                            | visíveis ao Suricata na
-                |                            | própria interface
-   +------------+-------------+              |
-   | As duas máquinas ficam   +--------------+
-   | disponíveis durante todo |  A máquina vítima envia
-   | o semestre, inclusive    |  eventos de SO ao agente
-   | simultaneamente na demo  |  Wazuh (HIDS)
-   +--------------------------+
+  Host Linux único do projeto (WSL2, na máquina do Windows)
+  +----------------------------------+-----------------------------+
+  | Docker Compose (máquina SOC)     | VM Linux (KVM) da vítima    |
+  +----------------------------------+-----------------------------+
+  | Wazuh manager + indexer          | Wazuh agent                 |
+  | Wazuh dashboard                  | SSH com senha fraca         |
+  | Suricata (network_mode host)     | serviços frágeis            |
+  | Shuffle (SOAR)                   |                             |
+  +----------------------------------+-----------------------------+
+  fluxo: o agente envia eventos ao manager na 1514, pela ponte do libvirt;
+  os ataques (nmap, hydra) saem do host pela mesma ponte e são vistos pelo Suricata.
 ```
 
 Fluxo de dados:
 
-1. Wazuh agent (dentro da VM na máquina vítima) envia eventos de SO para o Wazuh manager (porta 1514).
-2. Suricata (máquina SOC) inspeciona o tráfego local, incluindo os ataques originados na própria máquina SOC, e gera alertas (eve.json).
+1. Wazuh agent (dentro da VM vítima) envia eventos de SO para o Wazuh manager, pela rede isolada do libvirt (porta 1514).
+2. Suricata (com network_mode host) inspeciona a ponte do libvirt e o tráfego do host, incluindo os ataques originados nele, e gera alertas (eve.json).
 3. Alertas do Suricata são enviados ao Wazuh via logcollector/integração.
 4. O Wazuh aplica regras (built-in + custom) e classifica a severidade.
 5. Alertas críticos são encaminhados ao Shuffle via webhook (integração no ossec.conf).
@@ -121,16 +109,16 @@ Fluxo de dados:
 
 Convenção de IDs: T## = atividade (T01 a T56); o ID é nominal, a ordem real de execução é a de (semana, ordem) na seção 6. Frente (infra, detecção, dashboards, resposta, documentação, demo) é rótulo de contexto.
 
-| Aspecto      | Como funciona                                                                                                                                                                                 |
-| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Ordem        | Sequência única: T01, T02, T03, ... T56. Atividades dentro da semana seguem a ordem numérica; entre semanas vale o critério de aceite da semana anterior como porta de entrada                |
-| Prioridade   | P0 = requisito do slide ou pré-requisito de algo a jusante, não pode sair. P1 = aprofundamento cortável (T32 Grafana, T43 Metasploit), executado só se a semana fechar em dia                 |
-| Máquinas     | Máquina SOC (stack Docker Compose: Wazuh, Suricata, Shuffle) e máquina vítima (VM Linux com o agente). As duas ficam disponíveis durante todo o semestre e rodam em paralelo na apresentação  |
-| Dependências | A atividade só pode começar quando todos os pré-requisitos listados estiverem concluídos e aceitos                                                                                            |
-| Gate semanal | No fim de cada semana, o "Critério de aceite" da tabela da seção 5 é verificado antes de abrir a semana seguinte                                                                              |
-| Carga        | Uma pessoa executa todas as frentes; por isso cada semana tem prioridade e escopo mínimo declarados, e o risco R8 é acompanhado no report                                                     |
-| Entrega      | Cada atividade vai em uma branch própria e é integrada após a verificação do critério de aceite; o relatório entra em `docs/reports/` no mesmo commit                                         |
-| Idioma       | Código, pastas e nomes de arquivos em inglês; conteúdo dos documentos (docs/) em português                                                                                                    |
+| Aspecto      | Como funciona                                                                                                                                                                                                                                  |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ordem        | Sequência única: T01, T02, T03, ... T56. Atividades dentro da semana seguem a ordem numérica; entre semanas vale o critério de aceite da semana anterior como porta de entrada                                                                 |
+| Prioridade   | P0 = requisito do slide ou pré-requisito de algo a jusante, não pode sair. P1 = aprofundamento cortável (T32 Grafana, T43 Metasploit), executado só se a semana fechar em dia                                                                  |
+| Máquinas     | Host Linux único (WSL2): stack Docker Compose (Wazuh, Suricata, Shuffle) na máquina SOC e VM Linux (KVM) da vítima em rede isolada do libvirt. Os dois ambientes ficam disponíveis durante todo o semestre e rodam em paralelo na apresentação |
+| Dependências | A atividade só pode começar quando todos os pré-requisitos listados estiverem concluídos e aceitos                                                                                                                                             |
+| Gate semanal | No fim de cada semana, o "Critério de aceite" da tabela da seção 5 é verificado antes de abrir a semana seguinte                                                                                                                               |
+| Carga        | Uma pessoa executa todas as frentes; por isso cada semana tem prioridade e escopo mínimo declarados, e o risco R8 é acompanhado no report                                                                                                      |
+| Entrega      | Cada atividade vai em uma branch própria e é integrada após a verificação do critério de aceite; o relatório entra em `docs/reports/` no mesmo commit                                                                                          |
+| Idioma       | Código, pastas e nomes de arquivos em inglês; conteúdo dos documentos (docs/) em português                                                                                                                                                     |
 
 ---
 
@@ -242,7 +230,7 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 
 #### T04: Criar a estrutura de pastas e refinar o README
 - Semana: 1. Ordem: 2. Prioridade: P0. Pré-requisitos: T01.
-- Descrição: o repositório público já existe desde a T01; criar as pastas restantes da estrutura (`configs/suricata/`, `configs/wazuh/`, `configs/shuffle/`, `scripts/attacks/`, `scripts/demo/`, `assets/`, ver seção 9), ajustar o `.gitignore` (pcaps grandes, .env com credenciais, certificados do Wazuh) e refinar o README.md (visão geral, arquitetura resumida, como subir).
+- Descrição: o repositório público já existe desde a T01; criar as pastas restantes da estrutura (`configs/suricata/`, `configs/wazuh/`, `configs/shuffle/`, `scripts/attacks/`, `scripts/demo/`, `assets/`), ajustar o `.gitignore` (pcaps grandes, .env com credenciais, certificados do Wazuh) e refinar o README.md (visão geral, arquitetura resumida, como subir).
 - Entregável: repositório público clonável com estrutura e README.
 
 #### T06: Subir o Wazuh single-node
@@ -270,7 +258,7 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 #### T08: Liberar as portas do Wazuh no firewall da máquina SOC
 - Semana: 2. Ordem: 3. Prioridade: P0. Pré-requisitos: T06.
 - Descrição: no firewall da máquina SOC (firewalld, ufw ou nftables, conforme a distribuição), liberar 1514/tcp (eventos dos agentes), 1515/tcp (registro/enroll de agentes), 55000/tcp (comunicação de autenticação de agentes, quando aplicável) e 443/tcp (dashboard) apenas para a rede local de lab (zona public ou serviço custom); documentar as regras; validar com nmap a partir da máquina vítima.
-- Entregável: portas acessíveis da máquina vítima para a máquina SOC; regras documentadas no README.
+- Entregável: portas acessíveis da máquina vítima para a máquina SOC; regras documentadas em `docs/guides/start-wazuh-stack.md`.
 
 #### T09: Instalar e registrar o Wazuh agent na VM
 - Semana: 2. Ordem: 4. Prioridade: P0. Pré-requisitos: T07, T06, T08.
@@ -456,7 +444,7 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 
 #### T44: Documentar a arquitetura final
 - Semana: 8. Ordem: 1. Prioridade: P0. Pré-requisitos: T37, T41.
-- Descrição: escrever `docs/architecture.md`: diagrama final (atualizado), portas abertas, fluxo de dados, decisões (apontando para este roadmap e para `docs/decisions.md`), credenciais de teste (sem segredos reais); atualizar o README com o procedimento de reprodução completo (comandos exatos, ordem, tempo esperado); conferir consistência com o código do repo.
+- Descrição: escrever `docs/architecture.md` como dono das portas abertas e do fluxo de dados: diagrama final (atualizado), portas abertas, decisões (apontando para este roadmap e para `docs/decisions.md`), credenciais de teste (sem segredos reais); mover para ele o conteúdo de portas que hoje está em `docs/guides/start-wazuh-stack.md` e deixar link no guia; manter o `README.md` como resumo com ponteiros, sem duplicar procedimentos, que ficam em `docs/guides/`; conferir consistência com o código do repo.
 - Entregável: documentação completa e consistente.
 
 #### T45: Verificação técnica da documentação da arquitetura
@@ -534,7 +522,7 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 | R3  | Suricata em container não enxerga a interface                                                | NIDS cego                                 | network_mode host é obrigatório; validar na semana 2 (T12)                                                                                                                                                                                            |
 | R4  | Shuffle pesado (Java) desestabiliza a stack                                                  | Stack instável durante a demo             | Limitar RAM do container (Xmx) na T18; Wazuh tem prioridade                                                                                                                                                                                           |
 | R5  | Regras padrão do Wazuh geram ruído (falsos positivos)                                        | Dashboard poluído, demo confusa           | Regras custom ajustadas na semana 4 (T26, T27 e T28) e revisadas na semana 7 (T40 e T41)                                                                                                                                                              |
-| R6 | Ambiguidade entre Docker CE e podman-compose no host Linux                        | Fricção e incompatibilidade               | Escolher Docker CE na semana 1 (T03) e documentar; não misturar                                                                                                                                                                                       |
+| R6  | Ambiguidade entre Docker CE e podman-compose no host Linux                                   | Fricção e incompatibilidade               | Escolher Docker CE na semana 1 (T03) e documentar; não misturar                                                                                                                                                                                       |
 | R7  | Falha na integração Wazuh, Shuffle (webhook)                                                 | SOAR não dispara                          | Fallback: Active Response nativo do Wazuh como camada de resposta independente (T35 e T36)                                                                                                                                                            |
 | R8  | Carga concentrada em uma pessoa por semana                                                   | Semana travada e entrega atrasada         | Prioridade P0/P1 por atividade, escopo mínimo da semana (seção 5); as atividades P1 (T32, T43) saem antes das P0; o report semanal registra os desvios                                                                                                |
 | R9  | Apresentação depende das duas máquinas em rede                                               | Demo não roda na hora                     | T55 valida sala, rede e tomadas com antecedência; vídeo offline como plano B; alternativa documentada de rodar a VM vítima na própria máquina SOC                                                                                                     |
@@ -543,32 +531,10 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 
 ## 8. Perguntas em aberto
 
-As perguntas em aberto ficam em `docs/open-questions.md`; as resolvidas viram decisões registradas em `docs/decisions.md` (criado na T35). Histórico já resolvido:
-
-1. Acompanhamento com demo ao vivo e repositório público (GitHub).
-2. Vítima em VM (KVM) na máquina vítima, ambiente isolado do uso diário.
-3. Escopo do projeto: individual, com IDs T## em ordem de execução, prioridade P0/P1, gate de aceite por semana e matriz de cobertura.
-4. Máquinas: as duas ficam disponíveis durante todo o semestre e podem rodar em paralelo na apresentação; o Grafana entra como atividade opcional (T32).
+As perguntas em aberto e o histórico das já resolvidas ficam em `docs/open-questions.md`; as resolvidas viram decisões registradas em `docs/decisions.md` (criado na T35).
 
 ---
 
-## 9. Estrutura futura do repositório (planejada, ainda não criada)
+## 9. Estrutura do repositório
 
-```
-soc-siem-lab/
-├── README.md            # visão geral, arquitetura, como subir
-├── docker-compose.yml   # Wazuh, Suricata, Shuffle
-├── docs/                # documentos em português
-│   ├── README.md        # índice e convenções dos docs
-│   ├── reports/         # relatórios por atividade (1 por atividade)
-│   ├── guides/          # guias passo a passo de reprodução
-│   └── ...              # architecture, decisions, demo-guide, faq
-├── configs/
-│   ├── suricata/        # regras custom, integração com Wazuh
-│   ├── wazuh/           # regras custom, ossec.conf, integração Shuffle
-│   └── shuffle/         # exportação dos workflows
-├── scripts/
-│   ├── attacks/         # nmap, hydra, simulação do Wazuh
-│   └── demo/            # script único do cenário end-to-end
-└── assets/              # pcaps, prints, vídeo da demo
-```
+A estrutura de pastas é a tabela do `README.md` e o índice dos documentos é o `docs/README.md`.

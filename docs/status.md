@@ -8,11 +8,11 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 
 ## Resumo
 
-- Última atualização: 13/09/2026
-- Concluídas: 6 de 56
+- Última atualização: 21/09/2026
+- Concluídas: 17 de 56
 - Semana atual: 2 (21/09/2026), Vítima e NIDS no ar
-- Pendente da semana: T05, T07 a T10 e T12 a T17
-- Próxima atividade: T05, preparar a virtualização e criar a VM vítima
+- Pendente da semana: nenhuma
+- Próxima atividade: T18, subir o Shuffle standalone
 
 ## Semana 0 (28/08/2026): Definições iniciais (2/2)
 
@@ -30,21 +30,21 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T06 | Subir o Wazuh single-node | P0 | done | [T06](reports/T06-start-wazuh.md) |
 | T11 | Gate do acompanhamento 1 | P0 | done | [T11](reports/T11-gate-week-1.md) |
 
-## Semana 2 (21/09/2026): Vítima e NIDS no ar (0/11)
+## Semana 2 (21/09/2026): Vítima e NIDS no ar (11/11)
 
 | ID | Atividade | Prioridade | Status | Relatório |
 |---|---|---|---|---|
-| T05 | Preparar a virtualização e criar a VM vítima | P0 | pendente | |
-| T07 | Instalar o SO na VM e liberar o acesso ssh | P0 | pendente | |
-| T08 | Liberar as portas do Wazuh no firewalld da máquina SOC | P0 | pendente | |
-| T09 | Instalar e registrar o Wazuh agent na VM | P0 | pendente | |
-| T10 | Validar a coleta de logs e o status Active do agente | P0 | pendente | |
-| T12 | Subir o Suricata em container com network_mode host | P0 | pendente | |
-| T13 | Baixar pcaps maliciosos e testar em modo pcap | P0 | pendente | |
-| T14 | Integrar Suricata ao Wazuh (infraestrutura) | P0 | pendente | |
-| T15 | Criar o decoder para os eventos do Suricata no Wazuh | P0 | pendente | |
-| T16 | Criar as regras de correspondência para os alertas do Suricata | P0 | pendente | |
-| T17 | Validar alertas do Suricata no dashboard | P0 | pendente | |
+| T05 | Preparar a virtualização e criar a VM vítima | P0 | done | [T05](reports/T05-create-vm.md) |
+| T07 | Instalar o SO na VM e liberar o acesso ssh | P0 | done | [T07](reports/T05-create-vm.md) |
+| T08 | Liberar as portas do Wazuh no firewalld da máquina SOC | P0 | done | [T08](reports/T08-open-wazuh-ports.md) |
+| T09 | Instalar e registrar o Wazuh agent na VM | P0 | done | [T09](reports/T09-wazuh-agent.md) |
+| T10 | Validar a coleta de logs e o status Active do agente | P0 | done | [T10](reports/T10-validate-agent.md) |
+| T12 | Subir o Suricata em container com network_mode host | P0 | done | [T12](reports/T12-suricata.md) |
+| T13 | Baixar pcaps maliciosos e testar em modo pcap | P0 | done | [T13](reports/T13-malicious-pcaps.md) |
+| T14 | Integrar Suricata ao Wazuh (infraestrutura) | P0 | done | [T14](reports/T14-suricata-wazuh.md) |
+| T15 | Criar o decoder para os eventos do Suricata no Wazuh | P0 | done | [T15](reports/T15-suricata-decoder.md) |
+| T16 | Criar as regras de correspondência para os alertas do Suricata | P0 | done | [T16](reports/T16-suricata-rules.md) |
+| T17 | Validar alertas do Suricata no dashboard | P0 | done | [T17](reports/T17-suricata-dashboard.md) |
 
 ## Semana 3 (28/09/2026): SOAR conectado (0/6)
 

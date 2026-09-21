@@ -1,12 +1,12 @@
-# <ID1>, <ID2>, ...: <Nome das atividades>
+# <ID>: <Nome da atividade>
 
-> Copie este arquivo para `docs/reports/<nome-curto>.md`, preencha as seções e remova os textos de orientação entre parênteses.
-> O relatório pode cobrir uma única atividade ou várias (ex.: as atividades da mesma semana). No segundo caso, liste os IDs na seção de metadados e indique, em cada seção, a qual atividade cada ponto pertence.
+> Copie este arquivo para `docs/reports/<ID>-<nome-curto>.md`, preencha as seções e remova os textos de orientação entre parênteses.
+> Um relatório por atividade: o arquivo cobre uma única atividade, com o ID no nome do arquivo e nos metadados.
 
 ## Metadados
 
 - Semana: <1 a 10>
-- Atividades cobertas: <IDs, ex.: T12, T13, T14>
+- Atividade: <ID>
 - Prioridade: <P0 | P1>
 - Pré-requisitos: <IDs, ex.: T03, T06>
 - Status: done | partial
@@ -14,22 +14,21 @@
 
 ## Resumo do que foi feito
 
-(Passos principais e comandos executados, de forma curta. Se houver mais de uma atividade, use um sub-bloco por atividade.)
-
 ### <ID>: <Nome>
+
 - passos e comandos
 
 ## Dificuldades
 
-(O que não funcionou de primeira e como foi resolvido. Dificuldades demonstram trabalho real e alimentam o acompanhamento semanal. Se houver mais de uma atividade, indique a qual atividade cada dificuldade pertence.)
+(O que não funcionou de primeira e como foi resolvido. Dificuldades demonstram trabalho real e alimentam o acompanhamento semanal.)
 
 ## Aprendizados e avisos (handoff)
 
-(O que é preciso saber antes de começar uma atividade dependente ou de retomar o projeto depois de uma pausa: configurações específicas, caminhos de arquivo, pontos de atenção. Leitura obrigatória das atividades que listam estes IDs como pré-requisito.)
+(O que é preciso saber antes de começar uma atividade dependente ou de retomar o projeto depois de uma pausa: configurações específicas, caminhos de arquivo, pontos de atenção. Leitura obrigatória das atividades que listam este ID como pré-requisito.)
 
 ## Entregáveis
 
-(Links ou caminhos no repo do que ficou pronto: compose, regras, exportação do workflow, prints, documentos. Um item por atividade quando houver mais de uma.)
+(Links ou caminhos no repo do que ficou pronto: compose, regras, exportação do workflow, prints, documentos.)
 
 ## Acompanhamento
 
