@@ -1,0 +1,13 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1680
+PlayResY: 1050
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Base,DejaVu Sans,25,&H00FFFFFF,&H000000FF,&H0012324F,&H9912324F,1,0,0,0,100,100,0,0,3,2,0,2,40,40,36,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:40.00,Base,,0,0,0,,Semana 2: ataque ao vivo a partir da VM vítima (16 SYNs para a porta 22)\NSuricata detecta ET SCAN, o Wazuh classifica na regra 100210 (nível 6) e o alerta aparece no painel
