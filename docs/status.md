@@ -8,11 +8,11 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 
 ## Resumo
 
-- Última atualização: 20/09/2026
-- Concluídas: 13 de 56
+- Última atualização: 21/09/2026
+- Concluídas: 14 de 56
 - Semana atual: 2 (21/09/2026), Vítima e NIDS no ar
-- Pendente da semana: T14 a T17
-- Próxima atividade: T14, integrar o Suricata ao Wazuh
+- Pendente da semana: T15 a T17
+- Próxima atividade: T15, criar o decoder para os eventos do Suricata no Wazuh
 
 ## Semana 0 (28/08/2026): Definições iniciais (2/2)
 
@@ -30,7 +30,7 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T06 | Subir o Wazuh single-node | P0 | done | [T06](reports/T06-start-wazuh.md) |
 | T11 | Gate do acompanhamento 1 | P0 | done | [T11](reports/T11-gate-week-1.md) |
 
-## Semana 2 (21/09/2026): Vítima e NIDS no ar (7/11)
+## Semana 2 (21/09/2026): Vítima e NIDS no ar (8/11)
 
 | ID | Atividade | Prioridade | Status | Relatório |
 |---|---|---|---|---|
@@ -41,7 +41,7 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T10 | Validar a coleta de logs e o status Active do agente | P0 | done | [T10](reports/T10-validate-agent.md) |
 | T12 | Subir o Suricata em container com network_mode host | P0 | done | [T12](reports/T12-suricata.md) |
 | T13 | Baixar pcaps maliciosos e testar em modo pcap | P0 | done | [T13](reports/T13-malicious-pcaps.md) |
-| T14 | Integrar Suricata ao Wazuh (infraestrutura) | P0 | pendente | |
+| T14 | Integrar Suricata ao Wazuh (infraestrutura) | P0 | done | [T14](reports/T14-suricata-wazuh.md) |
 | T15 | Criar o decoder para os eventos do Suricata no Wazuh | P0 | pendente | |
 | T16 | Criar as regras de correspondência para os alertas do Suricata | P0 | pendente | |
 | T17 | Validar alertas do Suricata no dashboard | P0 | pendente | |

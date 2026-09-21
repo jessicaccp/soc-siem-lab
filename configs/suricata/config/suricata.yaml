@@ -78,6 +78,14 @@ outputs:
         - ssh
         - flow
         - stats:
+  # Segundo arquivo, só com alertas: é ele que o Wazuh lê (T14). O eve.json
+  # acima continua completo, com os logs de transação, para análise de tráfego.
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve-alerts.json
+      types:
+        - alert:
 
 logging:
   default-log-level: notice

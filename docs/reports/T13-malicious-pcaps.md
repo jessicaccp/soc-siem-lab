@@ -35,7 +35,7 @@ docker exec suricata suricata -r /pcaps/botnet-capture-20110810-neris.pcap \
 
 | pcap | Pacotes | Entradas `alert` | Alertas de assinatura | Assinaturas distintas |
 |---|---|---|---|---|
-| `botnet-capture-20110810-neris.pcap` | 323.154 | 7.254 | 1.036 | 22 |
+| `botnet-capture-20110810-neris.pcap` | 323.154 | 4.146 | 1.037 | 22 |
 | `botnet-capture-20110812-rbot.pcap` | 495.056 | 42.018 | 41.822 | 19 |
 
 Entradas `alert` são todas as linhas com `event_type: alert`, incluindo as internas do engine (checksum, stream, applayer). Alertas de assinatura são as entradas cuja `signature` começa com `ET ` ou `GPL `.
@@ -103,6 +103,7 @@ Entradas `alert` são todas as linhas com `event_type: alert`, incluindo as inte
 3. Com a configuração padrão, o replay do neris gerou 3.109 alertas, todos internos do engine (checksum, stream), e nenhuma assinatura ET. A captura vem da rede pública do laboratório da CTU (`147.32.84.0/24`), que não pertence ao `HOME_NET` do projeto; as assinaturas com direção `$HOME_NET -> $EXTERNAL_NET` não disparam. Resolvido com `--set vars.address-groups.HOME_NET=147.32.84.0/24` na linha de comando, o que deixou a configuração versionada intacta para a captura live. Com o ajuste, as assinaturas ET subiram de zero para 1.036 no neris.
 4. Os arquivos de saída do replay pertencem ao root, porque o `docker exec` entra no container como root, o que impede apagá-los pelo host. A limpeza é feita com `docker exec suricata rm -rf /var/log/suricata/replay-*`.
 5. Um terceiro pcap testado, captura de VM com endereço privado (`10.0.2.0/24`), gerou 4 alertas internos do engine e nenhuma assinatura ET, mesmo com o `HOME_NET` correto. Foi descartado e não entrou no guia.
+6. O `eve-log` do Suricata acrescenta ao arquivo existente em vez de recriá-lo. O diretório `replay-neris/` recebeu duas execuções do mesmo pcap (a primeira sem o `HOME_NET` ajustado), e os contadores somados das duas apareceram como resultado de uma. Os números do replay do neris foram refeitos com uma execução limpa (4.146 alertas, 1.037 de assinatura) e o guia passou a instruir a limpar o arquivo antes do replay.
 
 ## Aprendizados e avisos (handoff)
 
@@ -123,6 +124,6 @@ Entradas `alert` são todas as linhas com `event_type: alert`, incluindo as inte
 
 ## Acompanhamento
 
-- Os dois pcaps públicos rodam em replay offline e geram assinatura `ET MALWARE` (neris) e `ET SCAN` (rbot), com 1.036 e 41.822 alertas de assinatura respectivamente.
+- Os dois pcaps públicos rodam em replay offline e geram assinatura `ET MALWARE` (neris) e `ET SCAN` (rbot), com 1.037 e 41.822 alertas de assinatura respectivamente.
 - A dificuldade mais interessante foi o replay inicial sem nenhuma assinatura ET: o pcap vinha de rede pública e o `HOME_NET` do projeto não a cobria, então as assinaturas de direção ficaram mudas até o ajuste pela linha de comando.
 - Próximo passo da semana: T14, montar o `eve.json` do Suricata no container do manager e configurar o logcollector para receber os eventos brutos no Wazuh.

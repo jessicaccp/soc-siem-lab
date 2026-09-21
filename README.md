@@ -33,7 +33,7 @@ Dashboard em `https://localhost`. Procedimento completo, portas e verificação 
 
 A máquina SOC precisa de Docker CE com o plugin Compose (instalação e versões validadas em [`docs/guides/install-docker.md`](docs/guides/install-docker.md)). A VM vítima, com o agente Wazuh, é criada pelo guia [`docs/guides/victim-vm.md`](docs/guides/victim-vm.md).
 
-A vigilância de rede (Suricata) sobe separada, a partir de `configs/suricata/`: procedimento em [`docs/guides/start-suricata.md`](docs/guides/start-suricata.md) e teste das regras com pcaps públicos em [`docs/guides/replay-pcap.md`](docs/guides/replay-pcap.md).
+A vigilância de rede (Suricata) sobe separada, a partir de `configs/suricata/`: procedimento em [`docs/guides/start-suricata.md`](docs/guides/start-suricata.md), teste das regras com pcaps públicos em [`docs/guides/replay-pcap.md`](docs/guides/replay-pcap.md) e envio dos alertas para o Wazuh em [`docs/guides/suricata-wazuh.md`](docs/guides/suricata-wazuh.md).
 
 ## Documentação
 
