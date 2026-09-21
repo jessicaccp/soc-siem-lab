@@ -20,6 +20,14 @@ sudo setfacl -m u:"$USER":rw /dev/kvm
 sudo setfacl -m u:"$USER":rw /run/libvirt/libvirt-sock
 ```
 
+Depois de reiniciar o WSL2, o libvirt perde o estado da rede e a interface `virbr0` pode sobrar com o endereço antigo. O `net-start` falha com `Network is already in use by interface virbr0` e a VM não sobe com `network 'default' is not active`. O caminho é apagar a interface órfã e subir a rede de novo:
+
+```bash
+sudo ip link delete virbr0
+virsh -c qemu:///system net-start default
+virsh -c qemu:///system start victim
+```
+
 O QEMU dos domínios de sistema roda como `libvirt-qemu` e precisa atravessar o diretório das imagens:
 
 ```bash

@@ -19,6 +19,12 @@ cd configs/wazuh
 docker compose up -d
 ```
 
+O `ossec.conf` e o arquivo de regras são montados no container e lidos na subida, então mudança neles só vale depois de recriar o container: `docker compose up -d --force-recreate wazuh.manager`. Para recarregar apenas as regras, sem recriar o container:
+
+```bash
+docker exec wazuh-wazuh.manager-1 /var/ossec/bin/wazuh-control reload
+```
+
 2. Alimentar o feed com um replay de pcap (`replay-pcap.md`). A captura live já alimenta o feed sozinha, sempre que houver tráfego na ponte do libvirt.
 
 ## Verificação
@@ -37,7 +43,12 @@ curl -sk -u admin:SecretPassword 'https://localhost:9200/wazuh-alerts-4.x-*/_sea
 
 # testar uma linha do eve-alerts.json sem passar pelo replay
 docker exec -i wazuh-wazuh.manager-1 /var/ossec/bin/wazuh-logtest < alerta.json
+
+# gerar alerta na captura live, sem nmap, a partir da VM (acesso em victim-vm.md)
+ssh victim@192.168.122.50 'for i in $(seq 21 32); do timeout 1 bash -c "echo > /dev/tcp/203.0.113.$i/22"; done'
 ```
+
+O teste com SYNs vale como verificação do feed live: os endereços `203.0.113.0/24` são reservados para documentação e não respondem, mas os SYNs passam pela ponte e a assinatura `ET SCAN Potential SSH Scan OUTBOUND` dispara a partir do quinto SYN da mesma origem em 120 segundos.
 
 Saída esperada no teste de uma linha: `Phase 2` com os campos do JSON (`alert.signature`, `alert.category`, `src_ip`, `dest_ip`, `dest_port`) e `Phase 3` com a regra de nível correspondente.
 
@@ -83,3 +94,8 @@ O nível 12 é o `email_alert_level` do `ossec.conf`; sem e-mail configurado, o 
 - O logcollector não cria arquivo ausente: até o primeiro replay ele registra `Could not open file '/var/log/suricata/replay/eve-alerts.json'` no `ossec.log` e segue tentando.
 - Várias assinaturas do ET Open só disparam depois de repetição: `ET SCAN Potential SSH Scan OUTBOUND`, por exemplo, pede 5 SYNs da mesma origem para a porta 22 em 120 segundos. Um scan curto passa sem alerta, o que importa para a T24.
 - Os arquivos do replay pertencem ao root, porque o `docker exec` entra no container como root, o que impede apagá-los pelo host.
+- O replay deixa muitos alertas no índice e o dashboard fica carregado. Para voltar ao cenário limpo, apagar o índice do dia e rodar um replay novo:
+
+```bash
+curl -sk -u admin:SecretPassword -X DELETE 'https://localhost:9200/wazuh-alerts-4.x-2026.09.21'
+```
