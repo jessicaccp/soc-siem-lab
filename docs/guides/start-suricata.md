@@ -68,6 +68,7 @@ ssh victim@192.168.122.50 'curl -sI https://example.com | head -1; curl -s -o /d
 - A configuração versionada é uma versão enxuta do `suricata.yaml` (o default da imagem tem 2.258 linhas). A seção `af-packet` com `interface: default` é obrigatória para o modo live, mesmo com o `-i` na linha de comando; a interface em si vem de `SURICATA_INTERFACE` no `.env`.
 - `HOME_NET` cobre as faixas privadas (`192.168.0.0/16`, `10.0.0.0/8`, `172.16.0.0/12`), o que inclui a rede do laboratório `192.168.122.0/24`.
 - `logs/` e `lib/` não são versionados: são estado da máquina. O `eve.json` é regenerado a cada subida, e as regras vêm do `suricata-update`.
+- O `config/update.yaml`, criado pela imagem, é quem define o comando de recarga usado pelo `suricata-update` (`reload-command: suricatasc -c reload-rules`); ele também não é versionado, porque é estado do container.
 - A série 8.0.6 da imagem também existe. A 7.0.17 foi escolhida por manter o formato do `eve.json` coberto pelos decoders do Wazuh usados na T15.
 - Os pcaps públicos para testar as regras ficam em `assets/pcaps/`, montado como `/pcaps:ro` no container. Procedimento e comandos em `replay-pcap.md`.
 - O Suricata grava dois arquivos: `eve.json`, com alertas e logs de transação, e `eve-alerts.json`, só com alertas, que é o que o Wazuh lê. Integração em `suricata-wazuh.md`.

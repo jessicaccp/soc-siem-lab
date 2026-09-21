@@ -6,6 +6,7 @@ Registro de tudo que ainda não está decidido ou documentado no projeto. Pergun
 
 - As portas do Wazuh estão publicadas em todas as interfaces da máquina SOC, porque não há firewall ativo no WSL2 (lista e publicação em `docs/guides/start-wazuh-stack.md`). Restringir a origem à rede do laboratório (`192.168.122.0/24`) exige decidir entre alterar os binds no compose e usar regras `DOCKER-USER`; a segunda opção mantém o acesso pelo navegador do Windows, que chega pela interface `eth0`. Decisão para a semana 8 (hardening).
 - Na T48, confirmar se prender o dashboard em `127.0.0.1` mantém o acesso pelo navegador do Windows. Hoje o acesso funciona por `localhost` do WSL2 e a porta 443 está publicada em todas as interfaces.
+- Os índices de alertas do Wazuh não têm política de retenção e crescem com os replays e com os ataques de teste (o índice de 21/09 ficou com 46,2 mil alertas e 28,7 MB). Decidir na semana de hardening (T48 ou T49) se entra uma política de retenção (ISM) ou se a limpeza segue manual, com `DELETE wazuh-alerts-4.x-<data>`.
 
 ## Resolvidas
 

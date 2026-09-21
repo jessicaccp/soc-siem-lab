@@ -47,4 +47,4 @@ A vigilância de rede (Suricata) sobe separada, a partir de `configs/suricata/`:
 | `docs/` | Painel de status, relatórios, guias e perguntas em aberto |
 | `configs/` | Configurações por serviço: `suricata/`, `wazuh/`, `shuffle/` |
 | `scripts/` | `vm/` (VM vítima e agente), `attacks/` (nmap, hydra), `demo/` |
-| `assets/` | pcaps de teste e artefatos de demo, não versionados por tamanho |
+| `assets/` | prints em `assets/prints/` (versionados) e artefatos grandes (pcaps, vídeo) fora do git |

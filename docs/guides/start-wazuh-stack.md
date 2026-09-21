@@ -92,3 +92,7 @@ Resultado esperado: cluster `green`, dashboard respondendo com redirecionamento 
 | Certificados | 12 arquivos gerados pelo tool oficial em `config/wazuh_indexer_ssl_certs/` (fora do git) |
 
 O manager também recebe os alertas do Suricata (volume do diretório de logs e arquivo de regras no compose); o procedimento e as regras de nível estão em `suricata-wazuh.md`.
+
+As configurações do indexer e do dashboard (`config/wazuh_indexer/` e `config/wazuh_dashboard/`) são as do compose oficial wazuh-docker, sem alteração do projeto; o que o projeto muda é o `config/wazuh_cluster/wazuh_manager.conf`. O `config/certs.yml` é a entrada do gerador de certificados e define os nomes dos certificados.
+
+Os nomes dos containers usados nos comandos vêm do nome do projeto do Compose, que é o nome do diretório do compose: rodar a partir de `configs/wazuh` gera `wazuh-wazuh.manager-1`, `wazuh-wazuh.indexer-1` e `wazuh-wazuh.dashboard-1`. Rodar de outro diretório ou com `-p` muda o prefixo, e a conferência é `docker ps --format '{{.Names}}'`.
