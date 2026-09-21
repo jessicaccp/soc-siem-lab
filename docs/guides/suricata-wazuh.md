@@ -40,3 +40,7 @@ docker exec -i wazuh-wazuh.manager-1 /var/ossec/bin/wazuh-logtest < alerta.json
 ```
 
 Saída esperada no teste de uma linha: `Phase 2` com os campos do JSON (`alert.signature`, `alert.category`, `src_ip`, `dest_ip`, `dest_port`) e `Phase 3` com a regra de nível correspondente.
+
+## Decoder
+
+O decoder é o `json` do próprio ruleset do Wazuh (`ruleset/decoders/0006-json_decoders.xml`): os campos do `eve-alerts.json` entram no evento decodificado sem configuração adicional, como `alert.signature`, `alert.signature_id`, `alert.category` e `alert.severity`, mais `src_ip`, `src_port`, `dest_ip`, `dest_port`, `proto`, `app_proto`, `direction` e, nos alertas HTTP, os campos `http.*`. Não há decoder próprio.
