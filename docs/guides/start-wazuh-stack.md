@@ -90,3 +90,5 @@ Resultado esperado: cluster `green`, dashboard respondendo com redirecionamento 
 | Memória dos containers | indexer 1,5 GB, manager 868 MB, dashboard 250 MB |
 | Política de restart | `unless-stopped` nos três serviços |
 | Certificados | 12 arquivos gerados pelo tool oficial em `config/wazuh_indexer_ssl_certs/` (fora do git) |
+
+O manager também recebe os alertas do Suricata (volume do diretório de logs e arquivo de regras no compose); o procedimento e as regras de nível estão em `suricata-wazuh.md`.

@@ -73,7 +73,7 @@ rm -f "$ASKPASS"
 
 O `virsh domifaddr victim --source arp` responde `internal error: wrong nlmsg len` no kernel do WSL2; o método que funciona é ler o lease do dnsmasq com `virsh net-dhcp-leases default`.
 
-## 5. Snapshot e retorno ao estado limpo
+## 5. Snapshots e retorno ao estado limpo
 
 Com a VM desligada:
 
@@ -84,13 +84,29 @@ virsh -c qemu:///system snapshot-create-as --name clean-install \
 virsh -c qemu:///system start victim
 ```
 
-Para voltar ao estado limpo (descarta tudo o que veio depois):
+Para voltar a um snapshot (descarta tudo o que veio depois) e conferir o que existe:
 
 ```bash
 virsh -c qemu:///system shutdown victim
 virsh -c qemu:///system snapshot-revert victim --snapshotname clean-install
 virsh -c qemu:///system start victim
+virsh -c qemu:///system snapshot-list victim
 ```
+
+Snapshots do projeto, em ordem de criação:
+
+| Snapshot | Conteúdo | Uso |
+|---|---|---|
+| `clean-install` | imagem cloud, sshd com autenticação por senha, usuário de teste | volta ao estado sem agente |
+| `agent-enrolled` | o anterior mais o agente Wazuh registrado | ponto de retorno antes dos serviços de ataque (T19) |
+
+O nome do snapshot segue o conteúdo, não a semana: a agenda já remanejou atividades entre semanas (T05 e T07 saíram da semana 1 para a 2), e um nome preso à semana envelhece.
+
+O snapshot interno fica dentro de `~/vms/victim.qcow2`, com o metadado em `/var/lib/libvirt/qemu/snapshot/victim/<nome>.xml`. Nada disso vai ao repositório: o que fica versionado é esta receita e o nome. O `qemu-img` só enxerga o arquivo com a VM desligada.
+
+Renomear snapshot interno com `snapshot-edit --rename` troca apenas o metadado do libvirt: a etiqueta dentro do qcow2 continua com o nome antigo e o `snapshot-revert` passa a falhar com `Failed to load snapshot: No such file or directory`. Para renomear de verdade, desligar a VM, apagar o snapshot (`snapshot-delete`) e criar de novo com o nome novo.
+
+Depois de um `snapshot-revert`, o agente volta a se conectar sozinho em cerca de um minuto (`Wazuh agent started` no índice).
 
 ## Especificação
 

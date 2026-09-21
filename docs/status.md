@@ -9,10 +9,10 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 ## Resumo
 
 - Última atualização: 21/09/2026
-- Concluídas: 16 de 56
+- Concluídas: 17 de 56
 - Semana atual: 2 (21/09/2026), Vítima e NIDS no ar
-- Pendente da semana: T17
-- Próxima atividade: T17, validar alertas do Suricata no dashboard
+- Pendente da semana: nenhuma
+- Próxima atividade: T18, subir o Shuffle standalone
 
 ## Semana 0 (28/08/2026): Definições iniciais (2/2)
 
@@ -30,7 +30,7 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T06 | Subir o Wazuh single-node | P0 | done | [T06](reports/T06-start-wazuh.md) |
 | T11 | Gate do acompanhamento 1 | P0 | done | [T11](reports/T11-gate-week-1.md) |
 
-## Semana 2 (21/09/2026): Vítima e NIDS no ar (10/11)
+## Semana 2 (21/09/2026): Vítima e NIDS no ar (11/11)
 
 | ID | Atividade | Prioridade | Status | Relatório |
 |---|---|---|---|---|
@@ -44,7 +44,7 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T14 | Integrar Suricata ao Wazuh (infraestrutura) | P0 | done | [T14](reports/T14-suricata-wazuh.md) |
 | T15 | Criar o decoder para os eventos do Suricata no Wazuh | P0 | done | [T15](reports/T15-suricata-decoder.md) |
 | T16 | Criar as regras de correspondência para os alertas do Suricata | P0 | done | [T16](reports/T16-suricata-rules.md) |
-| T17 | Validar alertas do Suricata no dashboard | P0 | pendente | |
+| T17 | Validar alertas do Suricata no dashboard | P0 | done | [T17](reports/T17-suricata-dashboard.md) |
 
 ## Semana 3 (28/09/2026): SOAR conectado (0/6)
 

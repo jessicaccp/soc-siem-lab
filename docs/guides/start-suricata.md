@@ -70,3 +70,4 @@ ssh victim@192.168.122.50 'curl -sI https://example.com | head -1; curl -s -o /d
 - `logs/` e `lib/` não são versionados: são estado da máquina. O `eve.json` é regenerado a cada subida, e as regras vêm do `suricata-update`.
 - A série 8.0.6 da imagem também existe. A 7.0.17 foi escolhida por manter o formato do `eve.json` coberto pelos decoders do Wazuh usados na T15.
 - Os pcaps públicos para testar as regras ficam em `assets/pcaps/`, montado como `/pcaps:ro` no container. Procedimento e comandos em `replay-pcap.md`.
+- O Suricata grava dois arquivos: `eve.json`, com alertas e logs de transação, e `eve-alerts.json`, só com alertas, que é o que o Wazuh lê. Integração em `suricata-wazuh.md`.

@@ -61,3 +61,25 @@ Arquivo `configs/wazuh/config/wazuh_cluster/suricata_rules.xml`, montado em `/va
 As regras próprias usam `type="pcre2"` nos campos, porque a sintaxe padrão dos campos (OS_Regex) não aceita alternância como `(MALWARE|TROJAN)`.
 
 O nível 12 é o `email_alert_level` do `ossec.conf`; sem e-mail configurado, o alerta só sai marcado com `mail: true`. O nível 12 é o limiar previsto para a resposta automática na semana 3.
+
+## Estado validado (21/09/2026)
+
+| Item | Valor verificado |
+|---|---|
+| Arquivos lidos | `/var/log/suricata/eve-alerts.json` e `/var/log/suricata/replay/eve-alerts.json` |
+| Eventos brutos | `archives.json` com um registro por alerta recebido, `location` apontando para o arquivo do feed |
+| Decoder | `json`, campos extraídos conforme o `wazuh-logtest` |
+| Feed do replay do neris | 4.145 alertas |
+| Feed do replay do rbot | 42.019 alertas |
+| Feed live | Alertas reais da VM, regra 100210 (nível 6), com `location` `/var/log/suricata/eve-alerts.json` |
+| Índice `wazuh-alerts-4.x-2026.09.21` | 46.161 alertas do Suricata: 31.749 na regra 100210 (nível 6), 14.292 na 86601 (nível 3), 120 na 100200 (nível 12) |
+| Erros do decoder | 1.634 mensagens `Too many fields`, todas anteriores à separação do arquivo de alertas |
+
+## Notas
+
+- O `eve-alerts.json` existe porque o `eve.json` completo não serve para o SIEM: os eventos de `stats` e `flow` têm centenas de campos, e o decoder do Wazuh recusa esses eventos com `ERROR: Too many fields for JSON decoder` (1.634 mensagens em um replay), além de encher o `archives.json` (125 MB contra 8,8 MB lendo só alertas).
+- `logall_json` está ligado no `ossec.conf` para permitir conferir os eventos brutos no `archives.json`. O arquivo cresce a cada replay (121 MB depois de uma sessão de testes); desligar depois da validação, se o disco importar.
+- O `eve-log` do Suricata acrescenta ao arquivo existente em vez de recriá-lo. Para números limpos, limpar antes do replay: `docker exec suricata rm -f /var/log/suricata/replay/eve-alerts.json`.
+- O logcollector não cria arquivo ausente: até o primeiro replay ele registra `Could not open file '/var/log/suricata/replay/eve-alerts.json'` no `ossec.log` e segue tentando.
+- Várias assinaturas do ET Open só disparam depois de repetição: `ET SCAN Potential SSH Scan OUTBOUND`, por exemplo, pede 5 SYNs da mesma origem para a porta 22 em 120 segundos. Um scan curto passa sem alerta, o que importa para a T24.
+- Os arquivos do replay pertencem ao root, porque o `docker exec` entra no container como root, o que impede apagá-los pelo host.
