@@ -44,3 +44,20 @@ Saída esperada no teste de uma linha: `Phase 2` com os campos do JSON (`alert.s
 ## Decoder
 
 O decoder é o `json` do próprio ruleset do Wazuh (`ruleset/decoders/0006-json_decoders.xml`): os campos do `eve-alerts.json` entram no evento decodificado sem configuração adicional, como `alert.signature`, `alert.signature_id`, `alert.category` e `alert.severity`, mais `src_ip`, `src_port`, `dest_ip`, `dest_port`, `proto`, `app_proto`, `direction` e, nos alertas HTTP, os campos `http.*`. Não há decoder próprio.
+
+## Regras
+
+Arquivo `configs/wazuh/config/wazuh_cluster/suricata_rules.xml`, montado em `/var/ossec/etc/rules/suricata_rules.xml`.
+
+| Regra | Nível | Corresponde a |
+|---|---|---|
+| 86601 (ruleset) | 3 | Todo alerta do Suricata, sem distinção |
+| 100200 | 12 | Assinatura começando com `ET MALWARE` ou `ET TROJAN` |
+| 100201 | 12 | Categoria `A Network Trojan was detected` |
+| 100210 | 6 | Assinatura começando com `ET SCAN` |
+| 100211 | 6 | Categoria `Detection of a Network Scan` |
+| 100212 | 6 | Categoria `Attempted Information Leak` |
+
+As regras próprias usam `type="pcre2"` nos campos, porque a sintaxe padrão dos campos (OS_Regex) não aceita alternância como `(MALWARE|TROJAN)`.
+
+O nível 12 é o `email_alert_level` do `ossec.conf`; sem e-mail configurado, o alerta só sai marcado com `mail: true`. O nível 12 é o limiar previsto para a resposta automática na semana 3.

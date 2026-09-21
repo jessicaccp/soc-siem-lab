@@ -1,0 +1,45 @@
+<!--
+  Regras de correspondência para os alertas do Suricata (T16).
+
+  A regra 86601, do ruleset padrão, marca todo alerta do Suricata com nível 3.
+  As regras desta faixa elevam o nível conforme a assinatura e a categoria, para
+  que o dashboard e a resposta automática separem varredura de código malicioso.
+
+  Campos disponíveis vêm do decoder json (data.alert.signature, data.alert.category,
+  data.alert.severity, data.src_ip, data.dest_ip, data.proto).
+-->
+<group name="ids,suricata,">
+
+  <!-- Código malicioso: nível 12, acima do limiar de resposta automática (T34). -->
+  <rule id="100200" level="12">
+    <if_sid>86601</if_sid>
+    <field name="alert.signature" type="pcre2">^ET (MALWARE|TROJAN)</field>
+    <description>Suricata: código malicioso detectado - $(alert.signature) - origem $(src_ip) destino $(dest_ip)</description>
+  </rule>
+
+  <rule id="100201" level="12">
+    <if_sid>86601</if_sid>
+    <field name="alert.category" type="pcre2">^A Network Trojan was detected$</field>
+    <description>Suricata: tráfego de trojan detectado - $(alert.signature) - origem $(src_ip) destino $(dest_ip)</description>
+  </rule>
+
+  <!-- Varredura: nível 6, informação de reconhecimento. -->
+  <rule id="100210" level="6">
+    <if_sid>86601</if_sid>
+    <field name="alert.signature" type="pcre2">^ET SCAN</field>
+    <description>Suricata: varredura detectada - $(alert.signature) - origem $(src_ip) destino $(dest_ip)</description>
+  </rule>
+
+  <rule id="100211" level="6">
+    <if_sid>86601</if_sid>
+    <field name="alert.category" type="pcre2">^Detection of a Network Scan$</field>
+    <description>Suricata: varredura detectada - $(alert.signature) - origem $(src_ip) destino $(dest_ip)</description>
+  </rule>
+
+  <rule id="100212" level="6">
+    <if_sid>86601</if_sid>
+    <field name="alert.category" type="pcre2">^Attempted Information Leak$</field>
+    <description>Suricata: tentativa de coleta de informação - $(alert.signature) - origem $(src_ip) destino $(dest_ip)</description>
+  </rule>
+
+</group>
