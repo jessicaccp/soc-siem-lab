@@ -112,6 +112,37 @@ curl -s -X POST http://localhost:3001/api/v1/hooks/webhook_<id do trigger> \
 
 No histórico do workflow, o alerta de nível 12 fecha com `parse_alert` e `log_response` em `SUCCESS`; o de nível 5 fecha com `log_response` em `SKIPPED`.
 
+## Integração do Wazuh (T21)
+
+O manager encaminha os alertas de nível 12 ou mais para o webhook do workflow. O bloco fica em `configs/wazuh/config/wazuh_cluster/wazuh_manager.conf`:
+
+```xml
+  <integration>
+    <name>shuffle</name>
+    <hook_url>http://host.docker.internal:3001/api/v1/hooks/webhook_48805230-a71c-5b84-8668-e8b290e19ea3</hook_url>
+    <level>12</level>
+    <alert_format>json</alert_format>
+  </integration>
+```
+
+O `host.docker.internal` alcança a porta 3001 publicada na máquina SOC; o alias vem do `extra_hosts` do serviço `wazuh.manager` em `configs/wazuh/docker-compose.yml`. Para aplicar, recriar o container do manager:
+
+```bash
+cd configs/wazuh && docker compose up -d wazuh.manager
+docker exec wazuh-wazuh.manager-1 grep -i 'Enabling integration' /var/ossec/logs/ossec.log | tail -1
+# 2026/09/26 ... wazuh-integratord: INFO: Enabling integration for: 'shuffle'.
+```
+
+Conferência de alcance, sem disparar execução:
+
+```bash
+docker exec wazuh-wazuh.manager-1 sh -c \
+  'curl -s -o /dev/null -w "%{http_code}\n" http://host.docker.internal:3001/'
+# 200
+```
+
+Quais alertas acionam: os de nível 12 ou mais, hoje as regras de código malicioso do Suricata (`100200` e `100201`). As de varredura do Suricata (`100210` a `100212`, nível 6) e as de autenticação SSH (5760 nível 5, 5720 e 5763 nível 10) ficam abaixo do limiar. Se o cenário de brute force precisar acionar o SOAR, muda o `<level>` da integração ou o nível da regra custom da T26.
+
 ## Notas
 
 - Origem: `docker-compose.yml` do repositório [Shuffle/Shuffle](https://github.com/Shuffle/Shuffle), tag `v2.2.1`, a última estável (o `master` está em `2.3.0-rc2`). O antigo repositório `Shuffle/shuffle-docker` não existe mais. As imagens estão fixadas em `2.2.1`, inclusive a do worker usada pelo orborus.
