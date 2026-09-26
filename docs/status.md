@@ -8,11 +8,11 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 
 ## Resumo
 
-- Última atualização: 21/09/2026
-- Concluídas: 17 de 56
-- Semana atual: 2 (21/09/2026), Vítima e NIDS no ar
-- Pendente da semana: nenhuma
-- Próxima atividade: T18, subir o Shuffle standalone
+- Última atualização: 26/09/2026
+- Concluídas: 18 de 56
+- Semana atual: 3 (28/09/2026), SOAR conectado
+- Pendente da semana: T19 a T23
+- Próxima atividade: T19, configurar os serviços frágeis na VM vítima
 
 ## Semana 0 (28/08/2026): Definições iniciais (2/2)
 
@@ -46,11 +46,11 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T16 | Criar as regras de correspondência para os alertas do Suricata | P0 | done | [T16](reports/T16-suricata-rules.md) |
 | T17 | Validar alertas do Suricata no dashboard | P0 | done | [T17](reports/T17-suricata-dashboard.md) |
 
-## Semana 3 (28/09/2026): SOAR conectado (0/6)
+## Semana 3 (28/09/2026): SOAR conectado (1/6)
 
 | ID | Atividade | Prioridade | Status | Relatório |
 |---|---|---|---|---|
-| T18 | Subir o Shuffle standalone com limite de RAM | P0 | pendente | |
+| T18 | Subir o Shuffle standalone com limite de RAM | P0 | done | [T18](reports/T18-shuffle.md) |
 | T19 | Configurar serviços frágeis na VM vítima | P0 | pendente | |
 | T20 | Criar o workflow 1 no Shuffle | P0 | pendente | |
 | T21 | Configurar a integração do Wazuh com o Shuffle | P0 | pendente | |
