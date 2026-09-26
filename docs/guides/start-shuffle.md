@@ -70,10 +70,52 @@ docker compose down           # remove os containers e a rede, mantém os dados
 rm -rf shuffle-database/*     # apaga o banco do Shuffle (usuário, workflows, execuções)
 ```
 
+## Modo de execução dos workers
+
+O `docker-compose.yml` oficial pede `SHUFFLE_SWARM_CONFIG=run` no orborus, que cria os workers como serviços do Docker Swarm e precisa da rede overlay `shuffle_swarm_executions`. A máquina SOC não tem Swarm ativo (`docker info` responde `Swarm: inactive`), então essa rede não é criada, o container do Tenzir não sobe e nenhuma execução sai da fila. O projeto usa `SHUFFLE_SWARM_CONFIG=false` no `.env`, valor que o compose lê na variável do orborus: nesse modo os workers rodam como containers comuns, na rede do compose.
+
+Consequências:
+
+- O `tenzir-node`, que o orborus sobe para o pipeline de logs, fica na rede `tenzir-network` e não responde ao ping do orborus (`dial tcp: lookup tenzir-node`). O projeto não usa pipelines; as execuções não dependem dele.
+- Depois de recriar o container do orborus, o backend recusa a fila por cerca de 90 segundos com `Orborus UUID mismatch`, até o failover trocar o líder. Nesse intervalo as execuções ficam paradas em `EXECUTING`.
+
+## Workflow de resposta a brute force (T20)
+
+A definição fica versionada em `configs/shuffle/workflows/brute-force-response.json`, exportada do banco do Shuffle. Para registrar o workflow e o webhook em uma instância limpa:
+
+```bash
+bash scripts/shuffle/import-workflow.sh
+# workflow: brute-force-response (<id do workflow>)
+# webhook:  http://localhost:3001/api/v1/hooks/webhook_<id do trigger>
+```
+
+O script envia o JSON e registra o webhook. O id do hook é o id do trigger que está dentro do workflow, porque a URL é `POST /api/v1/hooks/webhook_<id>` (44 caracteres, com o prefixo).
+
+| Nó | App e ação | Papel |
+|---|---|---|
+| `Webhook` | trigger do tipo WEBHOOK | recebe o alerta do Wazuh |
+| `parse_alert` | Shuffle Tools, `execute_python` | extrai `rule_id`, `level`, `description`, `srcip` e `agent` do payload |
+| `log_response` | Shuffle Tools, `repeat_back_to_me` | registra a resposta no histórico da execução |
+
+O ramo entre `parse_alert` e `log_response` tem uma condição: `$parse_alert.message.level` maior que `11`, ou seja, só segue com severidade de nível 12 ou mais. Abaixo disso o nó é marcado como `SKIPPED`, com a razão `Minimum of one branch's conditions must be correct to continue`.
+
+Teste do webhook, sem depender do manager:
+
+```bash
+curl -s -X POST http://localhost:3001/api/v1/hooks/webhook_<id do trigger> \
+  -H 'Content-Type: application/json' \
+  -d '{"severity":3,"title":"sshd: brute force","rule_id":"5763",
+       "all_fields":{"rule":{"id":"5763","level":12},"agent":{"name":"victim"},
+       "data":{"srcip":"192.168.122.1"}}}'
+# {"success": true, "execution_id": "..."}
+```
+
+No histórico do workflow, o alerta de nível 12 fecha com `parse_alert` e `log_response` em `SUCCESS`; o de nível 5 fecha com `log_response` em `SKIPPED`.
+
 ## Notas
 
 - Origem: `docker-compose.yml` do repositório [Shuffle/Shuffle](https://github.com/Shuffle/Shuffle), tag `v2.2.1`, a última estável (o `master` está em `2.3.0-rc2`). O antigo repositório `Shuffle/shuffle-docker` não existe mais. As imagens estão fixadas em `2.2.1`, inclusive a do worker usada pelo orborus.
-- Diferenças em relação ao arquivo oficial: heap do OpenSearch de 1 GB em vez de 3 GB, porta 9201 no host em vez de 9200 e remoção dos serviços comentados (cadvisor, memcached, docker-socket-proxy).
+- Diferenças em relação ao arquivo oficial: heap do OpenSearch de 1 GB em vez de 3 GB, porta 9201 no host em vez de 9200, `SHUFFLE_SWARM_CONFIG` vindo do `.env` e remoção dos serviços comentados (cadvisor, memcached, docker-socket-proxy).
 - O primeiro start precisa de internet: o orborus baixa a imagem do worker e o backend monta as imagens dos apps padrão (`frikky/shuffle:<app>_<versão>`), que ficam no cache do Docker e servem às execuções seguintes.
 - Trocar `SHUFFLE_DEFAULT_PASSWORD`, `SHUFFLE_DEFAULT_APIKEY` ou a senha do OpenSearch depois do primeiro start não altera o usuário já gravado no banco: nesse caso, limpar `shuffle-database/` e subir de novo.
 - O usuário administrador é criado pelo backend a partir do `.env`, sem etapa de registro por e-mail na UI.
