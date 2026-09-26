@@ -91,11 +91,15 @@ bash scripts/shuffle/import-workflow.sh
 
 O script envia o JSON e registra o webhook. O id do hook é o id do trigger que está dentro do workflow, porque a URL é `POST /api/v1/hooks/webhook_<id>` (44 caracteres, com o prefixo).
 
+Na API, `POST /api/v1/workflows` sempre cria um workflow novo, com id novo; atualizar um existente é `PUT /api/v1/workflows/<id>`. O script confere se o id do arquivo já existe e escolhe o verbo.
+
 | Nó | App e ação | Papel |
 |---|---|---|
 | `Webhook` | trigger do tipo WEBHOOK | recebe o alerta do Wazuh |
-| `parse_alert` | Shuffle Tools, `execute_python` | extrai `rule_id`, `level`, `description`, `srcip` e `agent` do payload |
+| `parse_alert` | Shuffle Tools, `execute_python` | lê o alerta de `$exec.all_fields` e extrai `rule_id`, `level`, `description`, `srcip` e `agent` |
 | `log_response` | Shuffle Tools, `repeat_back_to_me` | registra a resposta no histórico da execução |
+
+O `parse_alert` recebe o objeto de alerta inteiro em `all_fields` e monta os campos em JSON no `print`; o `execute_python` devolve esse JSON dentro de `message`, e é por isso que as referências seguintes são `$parse_alert.message.<campo>`. O IP de origem sai de `data.srcip` (alertas de agente) ou de `data.src_ip` (alertas do Suricata), o que cobre as duas origens sem mudar o workflow.
 
 O ramo entre `parse_alert` e `log_response` tem uma condição: `$parse_alert.message.level` maior que `11`, ou seja, só segue com severidade de nível 12 ou mais. Abaixo disso o nó é marcado como `SKIPPED`, com a razão `Minimum of one branch's conditions must be correct to continue`.
 

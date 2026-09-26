@@ -9,10 +9,10 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 ## Resumo
 
 - Última atualização: 26/09/2026
-- Concluídas: 22 de 56
+- Concluídas: 23 de 56
 - Semana atual: 3 (28/09/2026), SOAR conectado
-- Pendente da semana: T23
-- Próxima atividade: T23, testar o workflow com alertas de teste
+- Pendente da semana: nenhuma
+- Próxima atividade: T24, gerar ataques reais (nmap, hydra)
 
 ## Semana 0 (28/08/2026): Definições iniciais (2/2)
 
@@ -46,7 +46,7 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T16 | Criar as regras de correspondência para os alertas do Suricata | P0 | done | [T16](reports/T16-suricata-rules.md) |
 | T17 | Validar alertas do Suricata no dashboard | P0 | done | [T17](reports/T17-suricata-dashboard.md) |
 
-## Semana 3 (28/09/2026): SOAR conectado (5/6)
+## Semana 3 (28/09/2026): SOAR conectado (6/6)
 
 | ID | Atividade | Prioridade | Status | Relatório |
 |---|---|---|---|---|
@@ -55,7 +55,7 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T20 | Criar o workflow 1 no Shuffle | P0 | done | [T20](reports/T20-workflow.md) |
 | T21 | Configurar a integração do Wazuh com o Shuffle | P0 | done | [T21](reports/T21-wazuh-shuffle.md) |
 | T22 | Confirmar a chegada de alerta de teste no Shuffle | P0 | done | [T22](reports/T22-shuffle-alert.md) |
-| T23 | Testar o workflow com alertas de teste | P0 | pendente | |
+| T23 | Testar o workflow com alertas de teste | P0 | done | [T23](reports/T23-workflow-tests.md) |
 
 ## Semana 4 (05/10/2026): Ataques reais e regras custom (0/6)
 

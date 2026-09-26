@@ -4,7 +4,7 @@
 
 Reunir o que o ambiente já faz e as evidências visuais geradas, para o acompanhamento semanal e para o vídeo de 3 a 5 minutos (T51). O roteiro final da apresentação é a T42.
 
-## O que mostrar hoje (fim da semana 2)
+## O que mostrar hoje (fim da semana 3)
 
 | Camada | O que já funciona | Como mostrar |
 |---|---|---|
@@ -12,19 +12,23 @@ Reunir o que o ambiente já faz e as evidências visuais geradas, para o acompan
 | NIDS | Suricata em container host-network com 52.769 assinaturas ET Open, captura live na ponte e replay de pcaps | prints 04, 05 e 06, vídeos `live-alert.mp4` e `replay-pcap.mp4` |
 | SIEM | Alertas de host e de rede no mesmo painel, com nível por tipo: 12 para malware, 6 para varredura e 3 para o restante | prints 04 e 05 |
 | Dashboards | Painel nativo do Wazuh com os eventos, o FIM e o resumo por severidade | prints 01, 02 e 03 |
-| SOAR | Ainda não, entra na semana 3 (T18 a T23) | - |
+| SOAR | Shuffle em container com o workflow `brute-force-response`: alerta de nível 12 do Wazuh vira execução, com parse dos campos e registro da resposta (o bloqueio real do IP entra na semana 6) | prints 08, 09 e 10 |
 
 ## Prints (versionados)
 
 | Arquivo | O que mostra |
 |---|---|
-| `01-painel-visao-geral.png` | Resumo do painel: agentes conectados e contagem por severidade |
-| `02-fim-eventos.png` | Integridade de arquivos: o arquivo de teste em `/etc` apareceu como `added` e `deleted` |
-| `03-hids-agente.png` | Eventos do agente da vítima: falhas de autenticação SSH e sessões PAM |
-| `04-nids-alertas.png` | Alertas do Suricata no índice, com nível, descrição, IPs de origem e destino e porta |
-| `05-nids-malware.png` | Só os alertas de malware (regra 100200, nível 12), com assinatura ET e categoria |
-| `06-nids-live.png` | Alertas vindos da captura live, gerados por ataque na ponte |
-| `07-arquitetura.png` | Diagrama das camadas, das duas máquinas, das portas e do fluxo de dados |
+| `week-02/01-painel-visao-geral.png` | Resumo do painel: agentes conectados e contagem por severidade |
+| `week-02/02-fim-eventos.png` | Integridade de arquivos: o arquivo de teste em `/etc` apareceu como `added` e `deleted` |
+| `week-02/03-hids-agente.png` | Eventos do agente da vítima: falhas de autenticação SSH e sessões PAM |
+| `week-02/04-nids-alertas.png` | Alertas do Suricata no índice, com nível, descrição, IPs de origem e destino e porta |
+| `week-02/05-nids-malware.png` | Só os alertas de malware (regra 100200, nível 12), com assinatura ET e categoria |
+| `week-02/06-nids-live.png` | Alertas vindos da captura live, gerados por ataque na ponte |
+| `week-02/07-arquitetura.png` | Diagrama das camadas, das duas máquinas, das portas e do fluxo de dados |
+| `week-03/01-shuffle-workflows.png` | Lista de workflows do Shuffle com o `brute-force-response` registrado |
+| `week-03/02-shuffle-login.png` | Tela de login local do Shuffle |
+| `week-03/03-shuffle-execucao.png` | Execução disparada por alerta de malware: payload recebido e os dois nós em `SUCCESS` |
+| `week-03/04-shuffle-workflow.png` | Editor do workflow, com o trigger de webhook, o parse e o nó de registro |
 
 ## Vídeos (fora do git, por tamanho)
 
@@ -42,13 +46,17 @@ Os vídeos ficam em `assets/media/`, que não é versionado. Os cortes começam 
 2. **HIDS** (print 01 e vídeo `hids-auth`): agente `Active`, falha de autenticação e brute force detectados na vítima.
 3. **NIDS e SIEM** (vídeo `live-alert` e print 05): ataque na ponte, detecção por assinatura e alerta de malware no nível 12 no mesmo painel dos eventos de host.
 4. **Volume e reprodutibilidade** (vídeo `replay-pcap` e print 04): o replay de um pcap público alimentando o painel com milhares de alertas.
-5. **Fechamento**: o que falta é o SOAR, que entra na semana 3 (T18 a T23).
+5. **Fechamento**: o SOAR está no ar, com webhook, ramo por severidade e registro da resposta; o bloqueio automático do IP atinge a T33 a T38, na semana 6.
 
 ## Como regerar as evidências
 
 ```bash
 # prints do painel (assets/prints/week-02)
 node scripts/media/capture-stills.js
+
+# prints do Shuffle (assets/prints/week-03)
+PW_CORE=<modulo playwright-core> CHROMIUM=<chromium do playwright> \
+  WORKFLOW_ID=<id> EXECUTION_ID=<id> node scripts/media/capture-shuffle.js
 
 # vídeos (assets/media), um por cenário
 node scripts/media/capture-video.js live /tmp/videos/live-alert.webm
@@ -57,7 +65,7 @@ node scripts/media/capture-video.js hids /tmp/videos/hids-auth.webm
 scripts/media/render.sh /tmp/videos assets/media
 ```
 
-Dependências: Node com `playwright-core` e o Chromium do Playwright, e um ffmpeg com libx264 e libass (o build estático de `johnvansickle.com/ffmpeg` serve). Os scripts leem `PW_CORE`, `CHROMIUM`, `DASHBOARD_URL`, `DASHBOARD_USER`, `DASHBOARD_PASSWORD` e `VICTIM_ADDRESS` do ambiente. Os cortes de tempo em `render.sh` são os da gravação usada aqui; uma gravação nova pode precisar de ajuste, porque o tempo de carga do painel varia.
+Dependências: Node com `playwright-core` e o Chromium do Playwright, e um ffmpeg com libx264 e libass (o build estático de `johnvansickle.com/ffmpeg` serve). Os scripts leem `PW_CORE`, `CHROMIUM`, `DASHBOARD_URL`, `DASHBOARD_USER`, `DASHBOARD_PASSWORD` e `VICTIM_ADDRESS` do ambiente; o do Shuffle lê ainda `SHUFFLE_URL`, `SHUFFLE_USER`, `SHUFFLE_PASSWORD`, `WORKFLOW_ID` e `EXECUTION_ID`, e o login usa os campos `#emailfield` e `#outlined-password-input`. Os cortes de tempo em `render.sh` são os da gravação usada aqui; uma gravação nova pode precisar de ajuste, porque o tempo de carga do painel varia.
 
 ## Notas
 
