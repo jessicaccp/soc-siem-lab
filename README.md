@@ -35,6 +35,8 @@ A máquina SOC precisa de Docker CE com o plugin Compose (instalação e versõe
 
 A vigilância de rede (Suricata) sobe separada, a partir de `configs/suricata/`: procedimento em [`docs/guides/start-suricata.md`](docs/guides/start-suricata.md), teste das regras com pcaps públicos em [`docs/guides/replay-pcap.md`](docs/guides/replay-pcap.md) e envio dos alertas para o Wazuh em [`docs/guides/suricata-wazuh.md`](docs/guides/suricata-wazuh.md).
 
+A orquestração de resposta (Shuffle) também sobe separada, a partir de `configs/shuffle/`, com procedimento e verificação em [`docs/guides/start-shuffle.md`](docs/guides/start-shuffle.md).
+
 ## Documentação
 
 Índice e convenções dos documentos em [`docs/README.md`](docs/README.md). O que editar, onde cada informação mora e como contribuir: [`AGENTS.md`](AGENTS.md).

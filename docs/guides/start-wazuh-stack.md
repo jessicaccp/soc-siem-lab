@@ -91,7 +91,7 @@ Resultado esperado: cluster `green`, dashboard respondendo com redirecionamento 
 | Política de restart | `unless-stopped` nos três serviços |
 | Certificados | 12 arquivos gerados pelo tool oficial em `config/wazuh_indexer_ssl_certs/` (fora do git) |
 
-O manager também recebe os alertas do Suricata (volume do diretório de logs e arquivo de regras no compose); o procedimento e as regras de nível estão em `suricata-wazuh.md`.
+O manager também recebe os alertas do Suricata (volume do diretório de logs e arquivo de regras no compose); o procedimento e as regras de nível estão em `suricata-wazuh.md`. A resposta automática, com o bloco `integration` que encaminha os alertas de nível 12 ou mais ao webhook do Shuffle, está em `start-shuffle.md`.
 
 As configurações do indexer e do dashboard (`config/wazuh_indexer/` e `config/wazuh_dashboard/`) são as do compose oficial wazuh-docker, sem alteração do projeto; o que o projeto muda é o `config/wazuh_cluster/wazuh_manager.conf`. O `config/certs.yml` é a entrada do gerador de certificados e define os nomes dos certificados.
 

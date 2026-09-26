@@ -8,11 +8,11 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 
 ## Resumo
 
-- Última atualização: 21/09/2026
-- Concluídas: 17 de 56
-- Semana atual: 2 (21/09/2026), Vítima e NIDS no ar
+- Última atualização: 26/09/2026
+- Concluídas: 23 de 56
+- Semana atual: 3 (28/09/2026), SOAR conectado
 - Pendente da semana: nenhuma
-- Próxima atividade: T18, subir o Shuffle standalone
+- Próxima atividade: T24, gerar ataques reais (nmap, hydra)
 
 ## Semana 0 (28/08/2026): Definições iniciais (2/2)
 
@@ -46,16 +46,16 @@ Status: `done` (concluída e aceita), `partial` (em andamento), `pendente` (não
 | T16 | Criar as regras de correspondência para os alertas do Suricata | P0 | done | [T16](reports/T16-suricata-rules.md) |
 | T17 | Validar alertas do Suricata no dashboard | P0 | done | [T17](reports/T17-suricata-dashboard.md) |
 
-## Semana 3 (28/09/2026): SOAR conectado (0/6)
+## Semana 3 (28/09/2026): SOAR conectado (6/6)
 
 | ID | Atividade | Prioridade | Status | Relatório |
 |---|---|---|---|---|
-| T18 | Subir o Shuffle standalone com limite de RAM | P0 | pendente | |
-| T19 | Configurar serviços frágeis na VM vítima | P0 | pendente | |
-| T20 | Criar o workflow 1 no Shuffle | P0 | pendente | |
-| T21 | Configurar a integração do Wazuh com o Shuffle | P0 | pendente | |
-| T22 | Confirmar a chegada de alerta de teste no Shuffle | P0 | pendente | |
-| T23 | Testar o workflow com alertas de teste | P0 | pendente | |
+| T18 | Subir o Shuffle standalone com limite de RAM | P0 | done | [T18](reports/T18-shuffle.md) |
+| T19 | Configurar serviços frágeis na VM vítima | P0 | done | [T19](reports/T19-weak-services.md) |
+| T20 | Criar o workflow 1 no Shuffle | P0 | done | [T20](reports/T20-workflow.md) |
+| T21 | Configurar a integração do Wazuh com o Shuffle | P0 | done | [T21](reports/T21-wazuh-shuffle.md) |
+| T22 | Confirmar a chegada de alerta de teste no Shuffle | P0 | done | [T22](reports/T22-shuffle-alert.md) |
+| T23 | Testar o workflow com alertas de teste | P0 | done | [T23](reports/T23-workflow-tests.md) |
 
 ## Semana 4 (05/10/2026): Ataques reais e regras custom (0/6)
 

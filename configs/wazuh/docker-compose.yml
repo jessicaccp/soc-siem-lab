@@ -4,6 +4,9 @@ services:
     image: wazuh/wazuh-manager:${WAZUH_IMAGE_VERSION:-4.14.7}
     hostname: wazuh.manager
     restart: unless-stopped
+    extra_hosts:
+      # Alcança os serviços publicados na máquina SOC, como o webhook do Shuffle (T21).
+      - "host.docker.internal:host-gateway"
     ulimits:
       memlock:
         soft: -1

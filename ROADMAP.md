@@ -304,7 +304,7 @@ Formato por atividade: Semana, Ordem, Prioridade, Pré-requisitos, Descrição, 
 
 #### T18: Subir o Shuffle standalone com limite de RAM
 - Semana: 3. Ordem: 1. Prioridade: P0. Pré-requisitos: T03.
-- Descrição: clonar o repositório shuffle/shuffle-docker; usar o modo standalone (containers de banco, OpenSearch, orbiter e a UI); limitar a RAM dos containers Java (ex.: Xmx de 1 a 2GB para o backend) para manter a stack estável durante a demo (R4); subir com docker compose e aguardar os serviços healthy; acessar a UI em http://localhost/3001 e concluir o setup local (e-mail de teste).
+- Descrição: usar o `docker-compose.yml` do repositório Shuffle/Shuffle (tag v2.2.1), que traz os containers do OpenSearch, do backend, do orborus e da UI; limitar a RAM do OpenSearch (o arquivo oficial pede 3GB de heap, o projeto usa 1GB) para manter a stack estável durante a demo (R4); subir com docker compose e aguardar o fim do init; acessar a UI em `http://localhost:3001` e entrar com as credenciais criadas pelas variáveis `SHUFFLE_DEFAULT_*`.
 - Entregável: UI do Shuffle acessível e estável.
 
 #### T19: Configurar serviços frágeis na VM vítima

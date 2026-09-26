@@ -1,4 +1,4 @@
-# Guia: VM vítima (T05 e T07)
+# Guia: VM vítima (T05, T07 e T19)
 
 Passo a passo para reproduzir a VM vítima (Ubuntu 22.04 server, KVM/libvirt no host do projeto) em uma máquina nova.
 
@@ -107,6 +107,7 @@ Snapshots do projeto, em ordem de criação:
 |---|---|---|
 | `clean-install` | imagem cloud, sshd com autenticação por senha, usuário de teste | volta ao estado sem agente |
 | `agent-enrolled` | o anterior mais o agente Wazuh registrado | ponto de retorno antes dos serviços de ataque (T19) |
+| `weak-services-configured` | o anterior mais o Apache ativo: superfície de ataque completa | ponto de retorno antes das varreduras e dos ataques (T24) |
 
 O nome do snapshot segue o conteúdo, não a semana: a agenda já remanejou atividades entre semanas (T05 e T07 saíram da semana 1 para a 2), e um nome preso à semana envelhece.
 
@@ -138,6 +139,33 @@ docker exec wazuh-wazuh.manager-1 /var/ossec/bin/agent_control -l
 ```
 
 O agente aparece como `Active` no manager depois do primeiro keepalive, cerca de um minuto após a instalação.
+
+## Serviços frágeis (T19)
+
+Os alvos dos cenários de ataque são o SSH com senha fraca e o servidor web. O SSH já vem do cloud-init (`ssh_pwauth: true` e o usuário `victim` com a senha fraca); o Apache entra pelo script `scripts/vm/setup-weak-services.sh`, que roda dentro da VM e confere a superfície inteira:
+
+```bash
+scp scripts/vm/setup-weak-services.sh victim@192.168.122.50:/tmp/
+ssh victim@192.168.122.50 'sudo bash /tmp/setup-weak-services.sh'
+```
+
+Saída esperada:
+
+```
+apache: active / enabled
+sshd password auth: passwordauthentication yes
+test account: victim P
+listening: 22 53 80
+```
+
+O `53` é o resolvedor local do systemd, preso em `127.0.0.53`, e não responde de fora. As portas alcançáveis pela máquina SOC, conferidas com `nc -z`:
+
+| Porta | Serviço | Papel nos cenários |
+|---|---|---|
+| 22/tcp | sshd com autenticação por senha | alvo do brute force com hydra (T24) e das tentativas que falham depois do bloqueio (T38) |
+| 80/tcp | Apache, página padrão do pacote | alvo da varredura do nmap (T24) |
+
+A VM não tem firewall (o `ufw` não está instalado), então não há regra a liberar para esses serviços.
 
 ## Notas
 
