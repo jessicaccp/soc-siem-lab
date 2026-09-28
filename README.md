@@ -20,6 +20,8 @@ A máquina SOC roda a stack em Docker Compose e a máquina vítima é uma VM Lin
 
 ## Como subir
 
+Ordem de subida do ambiente completo, do host ao SOAR, em [`docs/guides/first-run.md`](docs/guides/first-run.md). O resumo de cada peça fica abaixo.
+
 A stack da máquina SOC fica em `configs/wazuh/`:
 
 ```bash

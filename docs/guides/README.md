@@ -6,6 +6,7 @@ Formato de cada guia: objetivo, pré-requisitos, passos, verificação.
 
 | Guia | Cobre |
 |---|---|
+| `first-run.md` | Ordem de subida do ambiente completo a partir de um clone limpo (passos 1 a 11 e verificação final) |
 | `install-docker.md` | Docker CE e plugin Compose na máquina SOC (T03) |
 | `start-wazuh-stack.md` | Stack do Wazuh, portas publicadas e verificação (T06, T08) |
 | `victim-vm.md` | VM vítima no KVM/libvirt, acesso ssh, serviços frágeis, snapshot e agente Wazuh (T05, T07, T09, T19) |
