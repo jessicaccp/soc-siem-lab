@@ -65,7 +65,7 @@ ssh victim@192.168.122.50 'curl -sI https://example.com | head -1; curl -s -o /d
 
 ## Notas
 
-- A configuração versionada é uma versão enxuta do `suricata.yaml` (o default da imagem tem 2.258 linhas). A seção `af-packet` com `interface: default` é obrigatória para o modo live, mesmo com o `-i` na linha de comando; a interface em si vem de `SURICATA_INTERFACE` no `.env`.
+- A configuração versionada é uma versão enxuta do `suricata.yaml` (o default da imagem tem 2.258 linhas). A seção `af-packet` com `interface: default` é obrigatória para o modo live, mesmo com o `-i` na linha de comando; a interface em si vem de `SURICATA_INTERFACE` no `.env`. A interface é a ponte `virbr0` do libvirt, porque todo o tráfego entre a máquina SOC e a VM vítima passa por ela, incluindo os ataques originados no próprio host (decisão D7 do `ROADMAP.md`). O `network_mode: host` do serviço é o que dá ao container visão da interface; sem ele o Suricata não enxerga o tráfego e a detecção fica cega (risco R3).
 - `HOME_NET` cobre as faixas privadas (`192.168.0.0/16`, `10.0.0.0/8`, `172.16.0.0/12`), o que inclui a rede do laboratório `192.168.122.0/24`.
 - `logs/` e `lib/` não são versionados: são estado da máquina. O `eve.json` é regenerado a cada subida, e as regras vêm do `suricata-update`.
 - O `config/update.yaml`, criado pela imagem, é quem define o comando de recarga usado pelo `suricata-update` (`reload-command: suricatasc -c reload-rules`); ele também não é versionado, porque é estado do container.

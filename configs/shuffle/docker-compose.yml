@@ -1,6 +1,3 @@
-# Shuffle standalone: orquestração da resposta a incidentes (camada SOAR).
-# Derivado do docker-compose.yml oficial do repositório Shuffle/Shuffle, tag v2.2.1,
-# com as imagens fixadas nessa versão e o heap do OpenSearch reduzido para a RAM do laboratório.
 services:
   frontend:
     image: ghcr.io/shuffle/shuffle-frontend:2.2.1
@@ -60,8 +57,18 @@ services:
     restart: unless-stopped
     security_opt:
       - seccomp:unconfined
+  tenzir:
+    image: tenzir/tenzir:main
+    container_name: tenzir-node
+    hostname: tenzir-node
+    entrypoint: ["tenzir-node"]
+    command: ["--commands=web server --mode=dev --bind=0.0.0.0"]
+    user: "tenzir:tenzir"
+    networks:
+      - tenzir
+    restart: unless-stopped
+    mem_limit: 1g
   opensearch:
-    # Heap reduzido: o compose oficial pede 3 GB, que não cabem junto com o Wazuh (risco R4).
     image: opensearchproject/opensearch:3.2.0
     hostname: shuffle-opensearch
     container_name: shuffle-opensearch
@@ -86,7 +93,6 @@ services:
     volumes:
       - shuffle-database:/usr/share/opensearch/data:z
     ports:
-      # 9201 no host: o 9200 pertence ao indexer do Wazuh.
       - "9201:9200"
     networks:
       - shuffle
@@ -102,4 +108,7 @@ volumes:
 
 networks:
   shuffle:
+    driver: bridge
+  tenzir:
+    name: tenzir-network
     driver: bridge

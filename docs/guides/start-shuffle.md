@@ -70,14 +70,36 @@ docker compose down           # remove os containers e a rede, mantém os dados
 rm -rf shuffle-database/*     # apaga o banco do Shuffle (usuário, workflows, execuções)
 ```
 
+Os containers de execução (`worker-<uuid>` e `Shuffle-Tools_1-2-0_<nó>_<execução>`) não são criados pelo compose: cada execução deixa um ou mais deles parados no host. A limpeza é `docker container prune -f`. A causa provável da acumulação e o teste pendente estão em `docs/open-questions.md`.
+
 ## Modo de execução dos workers
 
 O `docker-compose.yml` oficial pede `SHUFFLE_SWARM_CONFIG=run` no orborus, que cria os workers como serviços do Docker Swarm e precisa da rede overlay `shuffle_swarm_executions`. A máquina SOC não tem Swarm ativo (`docker info` responde `Swarm: inactive`), então essa rede não é criada, o container do Tenzir não sobe e nenhuma execução sai da fila. O projeto usa `SHUFFLE_SWARM_CONFIG=false` no `.env`, valor que o compose lê na variável do orborus: nesse modo os workers rodam como containers comuns, na rede do compose.
 
 Consequências:
 
-- O `tenzir-node`, que o orborus sobe para o pipeline de logs, fica na rede `tenzir-network` e não responde ao ping do orborus (`dial tcp: lookup tenzir-node`). O projeto não usa pipelines; as execuções não dependem dele.
+- O `tenzir-node`, que o orborus sobe para o pipeline de logs, passou a ser declarado no compose do projeto; a seção "Container do Tenzir" tem a causa da falha, o procedimento e o estado validado. O projeto não usa pipelines e as execuções não dependem dele.
 - Depois de recriar o container do orborus, o backend recusa a fila por cerca de 90 segundos com `Orborus UUID mismatch`, até o failover trocar o líder. Nesse intervalo as execuções ficam paradas em `EXECUTING`.
+
+## Container do Tenzir
+
+O orborus sobe um container do Tenzir por conta própria, para o recurso de pipeline de logs do Shuffle 2.2.x. O projeto não usa pipelines, e essa criação não funciona neste ambiente: o orborus publica a porta `1514`, que já pertence ao manager do Wazuh, a criação falha, o container fica sem rede e o orborus registra erro em cada ciclo (`Bind for :::1514 failed: port is already allocated`). Mesmo sem rede o container roda e consome memória sem responder a nada: 212 MB logo após subir e 435 MB cerca de uma hora depois.
+
+O serviço passou a ser declarado em `configs/shuffle/docker-compose.yml`, com o mesmo entrypoint, o mesmo comando, o mesmo usuário e a mesma rede que o orborus usa, criada pelo compose com o nome fixo `tenzir-network`, mais o limite de 1 GB e a política `unless-stopped` do compose. Encontrando um container com esse nome já em execução, o orborus não cria outro e para de logar erro.
+
+Verificação:
+
+```bash
+docker compose ps tenzir                                        # running
+docker inspect --format '{{.HostConfig.Memory}}' tenzir-node     # 1073741824
+docker logs shuffle-orborus 2>&1 | grep -i tenzir                # nenhum erro novo
+docker exec shuffle-orborus sh -c 'wget -qO- --timeout=5 http://tenzir-node:5160/api/v0/ping'
+# o servidor responde, com HTTP 404 nesse caminho; o que importa é resolver o nome e conectar
+```
+
+Estado validado (27/09/2026): container `running`, sem reinícios, 487 MB de 1 GB, 12% de CPU, e nenhum erro novo do orborus depois da subida sob o compose.
+
+O `docker compose stop tenzir` volta ao comportamento anterior: o orborus tenta criar o dele e falha com o conflito da porta `1514`. Se em uma subida o orborus criar o container antes do compose, o container dele fica sem rede e o nosso não sobe por conflito de nome: remover com `docker rm -f tenzir-node` e subir de novo com `docker compose up -d tenzir`.
 
 ## Workflow de resposta a brute force (T20)
 
@@ -150,7 +172,7 @@ Quais alertas acionam: os de nível 12 ou mais, hoje as regras de código malici
 ## Notas
 
 - Origem: `docker-compose.yml` do repositório [Shuffle/Shuffle](https://github.com/Shuffle/Shuffle), tag `v2.2.1`, a última estável (o `master` está em `2.3.0-rc2`). O antigo repositório `Shuffle/shuffle-docker` não existe mais. As imagens estão fixadas em `2.2.1`, inclusive a do worker usada pelo orborus.
-- Diferenças em relação ao arquivo oficial: heap do OpenSearch de 1 GB em vez de 3 GB, porta 9201 no host em vez de 9200, `SHUFFLE_SWARM_CONFIG` vindo do `.env` e remoção dos serviços comentados (cadvisor, memcached, docker-socket-proxy).
+- Diferenças em relação ao arquivo oficial: heap do OpenSearch de 1 GB em vez de 3 GB, porta 9201 no host em vez de 9200, `SHUFFLE_SWARM_CONFIG` vindo do `.env`, o serviço `tenzir` declarado no compose em vez de criado pelo orborus e remoção dos serviços comentados (cadvisor, memcached, docker-socket-proxy).
 - O primeiro start precisa de internet: o orborus baixa a imagem do worker e o backend monta as imagens dos apps padrão (`frikky/shuffle:<app>_<versão>`), que ficam no cache do Docker e servem às execuções seguintes.
 - Trocar `SHUFFLE_DEFAULT_PASSWORD`, `SHUFFLE_DEFAULT_APIKEY` ou a senha do OpenSearch depois do primeiro start não altera o usuário já gravado no banco: nesse caso, limpar `shuffle-database/` e subir de novo.
 - O usuário administrador é criado pelo backend a partir do `.env`, sem etapa de registro por e-mail na UI.
